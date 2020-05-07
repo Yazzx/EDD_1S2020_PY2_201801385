@@ -1,10 +1,42 @@
-
 package proyecto2;
+
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import java.security.MessageDigest;
+import java.util.Arrays;
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import org.apache.commons.codec.binary.Base64;
+
+
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import proyecto2.IngresoUsuarioIndividual;
 
 import proyecto2.Estructuras.ArbolAVL;
 import proyecto2.Estructuras.ArbolB;
 import proyecto2.Estructuras.TablaHash;
+import proyecto2.Objetos.ObjEstudiante;
 
 /**
  *
@@ -14,16 +46,13 @@ public class Inicial extends javax.swing.JFrame {
 
     public IngresoUsuarioIndividual iusuario_individual = new IngresoUsuarioIndividual();
     
+
     // constructor
-    
-    
     public Inicial() {
         initComponents();
     }
 
     // Cosas que no se tocan
-    
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -44,6 +73,7 @@ public class Inicial extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jButton8 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
@@ -165,6 +195,16 @@ public class Inicial extends javax.swing.JFrame {
 
         jLabel4.setText("¿No tienes una cuenta?");
 
+        jButton2.setBackground(new java.awt.Color(8, 75, 131));
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jButton2.setText("Ingresar Usuarios");
+        jButton2.setBorder(null);
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -180,20 +220,28 @@ public class Inicial extends javax.swing.JFrame {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(396, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 102, Short.MAX_VALUE)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(16, 16, 16))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(54, Short.MAX_VALUE)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap(38, Short.MAX_VALUE)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18))
+                .addGap(14, 14, 14))
         );
 
         jMenu2.setText("Inicio");
@@ -236,11 +284,8 @@ public class Inicial extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    
     // fin de cosas que no se tocan
-    
-    
-    
+
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
@@ -263,18 +308,79 @@ public class Inicial extends javax.swing.JFrame {
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         // INGRESAR USUARIO A MANITA
-        
+
         this.setVisible(false);
         iusuario_individual.setVisible(true);
-            
+
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         // genera el reporte de la tabla hash
-        
-        System.out.println(Proyecto2.tablaHash.generarGraphviz());        
-        
+
+        System.out.println(Proyecto2.tablaHash.generarGraphviz());
+
     }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // aqui subo el json de estudiantes
+
+        JFileChooser dlg = new JFileChooser();
+        dlg.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        FileFilter filtro = new FileNameExtensionFilter("Archivos JSON (*.json)", "json");
+        dlg.setFileFilter(filtro);
+
+        //int opcion = dlg.showSaveDialog(jPanel1);
+        int opcion = dlg.showOpenDialog(jPanel1);
+
+        if (opcion == JFileChooser.APPROVE_OPTION) {
+
+            try {
+
+                File archivo = dlg.getSelectedFile();
+                if ((archivo == null) || (archivo.getName().equals(""))) {
+                    JOptionPane.showMessageDialog(this, "Nombre de archivo inválido", "Nombre de archivo inválido", JOptionPane.ERROR_MESSAGE);
+                }
+
+                Reader reader = Files.newBufferedReader(Paths.get(archivo.getAbsolutePath()));
+
+                try {
+                    JsonElement fileelement = JsonParser.parseReader(new FileReader(archivo));
+                    JsonObject objeto = fileelement.getAsJsonObject();
+                    
+                    // procesando los gets
+                    
+                    JsonArray cositousuarios = objeto.get("Usuarios").getAsJsonArray();
+                    
+                    for(JsonElement eleusuario : cositousuarios){
+                        
+                        // obtener como objeto
+                        JsonObject objusuario = eleusuario.getAsJsonObject();
+                        
+                        // extraer datos
+                        
+                        long carnet = objusuario.get("Carnet").getAsLong();
+                        String nombre = objusuario.get("Nombre").getAsString();
+                        String apellido = objusuario.get("Apellido").getAsString();
+                        String carrera = objusuario.get("Carrera").getAsString();
+                        String contraseña = objusuario.get("Password").getAsString();
+                        
+                        ObjEstudiante o1 = new ObjEstudiante(carnet, nombre, apellido, carrera, contraseña);
+                        
+                        Proyecto2.tablaHash.insertar(o1);                        
+                        
+                    }
+                    
+                    
+                    System.out.println(Proyecto2.tablaHash.generarGraphviz());
+                    
+                } catch (Exception e) {
+                }
+                
+        
+            } catch (Exception e) {
+            }
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -313,6 +419,7 @@ public class Inicial extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton8;

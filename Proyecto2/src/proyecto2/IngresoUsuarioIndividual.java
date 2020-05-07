@@ -1,5 +1,5 @@
-
 package proyecto2;
+
 import javax.swing.JOptionPane;
 import proyecto2.Objetos.ObjEstudiante;
 
@@ -198,29 +198,36 @@ public class IngresoUsuarioIndividual extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // ingresa usuarios a manita
-        
+
         long carnet = Long.parseLong(jTextField1.getText());
         String nombre = jTextField2.getText();
-        String apellido= jTextField3.getText();
-        String carrera= jTextField4.getText();
-        
+        String apellido = jTextField3.getText();
+        String carrera = jTextField4.getText();
+
         if (jTextField5.getText().equals(jTextField6.getText())) {
-            
+
             String contraseña = jTextField6.getText();
             ObjEstudiante o1 = new ObjEstudiante(carnet, nombre, apellido, carrera, contraseña);
-            
+
             Proyecto2.tablaHash.insertar(o1);
-            
+
+            jTextField1.setText("");
+            jTextField2.setText("");
+            jTextField3.setText("");
+            jTextField4.setText("");
+            jTextField5.setText("");
+            jTextField6.setText("");
+
             this.setVisible(false);
             Proyecto2.ini.setVisible(true);
-            
+
         } else {
-            
+
             JOptionPane.showMessageDialog(null, "Contraseñas no coinciden :C");
-                        
-        } 
-             
-        
+
+        }
+
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed

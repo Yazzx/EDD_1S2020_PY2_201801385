@@ -4,7 +4,9 @@
  * and open the template in the editor.
  */
 package proyecto2;
+import com.google.gson.Gson;
 import proyecto2.Estructuras.TablaHash;
+
 
 /**
  *
@@ -12,17 +14,11 @@ import proyecto2.Estructuras.TablaHash;
  */
 public class Proyecto2 {
 
-    public static boolean yausuarios;
     public static TablaHash tablaHash = new TablaHash();
     public static Inicial ini = new Inicial();
     
     public static void main(String[] args) {
-        
-        
-        
-        // TODO code application logic here
-        
-        ini.setVisible(true);
+       ini.setVisible(true);
     }
     
 }
