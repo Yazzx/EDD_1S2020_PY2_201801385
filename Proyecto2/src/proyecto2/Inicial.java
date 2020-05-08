@@ -45,12 +45,70 @@ import proyecto2.Objetos.ObjEstudiante;
 public class Inicial extends javax.swing.JFrame {
 
     public IngresoUsuarioIndividual iusuario_individual = new IngresoUsuarioIndividual();
-    
+    String llavesecreta = "EstaClaseSiSale";
 
     // constructor
     public Inicial() {
         initComponents();
     }
+    
+    public String encode(String llavesecreta, String cadena){
+        
+        String holi = "";
+        
+        try {
+            
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            byte[] llaveConstraseña = md5.digest(llavesecreta.getBytes("utf-8"));
+            byte[] llavebytes = Arrays.copyOf(llaveConstraseña, 24);
+            SecretKey key = new SecretKeySpec(llavebytes, "DESede");
+            Cipher cifrado = Cipher.getInstance("DESede");
+            cifrado.init(Cipher.ENCRYPT_MODE, key);
+            
+            byte [] plainTextBytes = cadena.getBytes("utf-8");
+            byte[] buf = cifrado.doFinal(plainTextBytes);
+            byte [] base64 = Base64.encodeBase64(buf);
+            holi = new String(base64);    
+                
+            
+        } catch (Exception e) {
+            
+            System.out.println(e);
+        }
+        
+        
+        return holi;
+        
+    }
+    
+    public String decode(String llavesecreta, String cadena_encriptada){
+    
+        String adios = "";
+    
+        try {
+            
+            byte[] mensaje = Base64.decodeBase64(cadena_encriptada.getBytes("utf-8"));
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            byte[] digestcontraseña = md5.digest(llavesecreta.getBytes("utf-8"));
+            byte[] llavebytes = Arrays.copyOf(digestcontraseña, 24);
+            SecretKey llave = new SecretKeySpec(llavebytes, "DESede");
+            Cipher nocifrado = Cipher.getInstance("DESede");
+            nocifrado.init(Cipher.DECRYPT_MODE, llave);
+            
+            byte[] textoplano = nocifrado.doFinal(mensaje);
+            adios = new String(textoplano, "UTF-8");
+            
+            
+        } catch (Exception e) {
+            
+            System.out.println(e);
+        }
+    
+        return adios;
+    }
+    
+    
+    
 
     // Cosas que no se tocan
     @SuppressWarnings("unchecked")
@@ -79,6 +137,7 @@ public class Inicial extends javax.swing.JFrame {
         jMenu4 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
         jMenu6 = new javax.swing.JMenu();
 
         jMenu1.setText("jMenu1");
@@ -123,10 +182,10 @@ public class Inicial extends javax.swing.JFrame {
 
         jLabel1.setBackground(new java.awt.Color(255, 255, 255));
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Usuario");
+        jLabel1.setText("Carnet");
 
         jTextField1.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField1.setForeground(new java.awt.Color(255, 255, 255));
+        jTextField1.setForeground(new java.awt.Color(0, 0, 0));
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
@@ -137,7 +196,7 @@ public class Inicial extends javax.swing.JFrame {
         jLabel2.setText("Contraseña");
 
         jTextField2.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField2.setForeground(new java.awt.Color(255, 255, 255));
+        jTextField2.setForeground(new java.awt.Color(0, 0, 0));
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField2ActionPerformed(evt);
@@ -260,6 +319,14 @@ public class Inicial extends javax.swing.JFrame {
         });
         jMenu3.add(jMenuItem3);
 
+        jMenuItem4.setText("Arbol AVL");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem4);
+
         jMenuBar1.add(jMenu3);
 
         jMenu6.setText("Configuraciones");
@@ -303,7 +370,21 @@ public class Inicial extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        // Ingresar a cada usuario
+        
+        long carnet = Long.parseLong(jTextField2.getText());
+        boolean esta = Proyecto2.tablaHash.buscarUsuario(carnet, jTextField1.getText());
+        
+        if (esta) {
+            
+            System.out.println("entraste :D");
+            
+            
+        } else {
+            JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos :c",
+                    "ATENCION", JOptionPane.WARNING_MESSAGE);
+        }
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
@@ -317,7 +398,12 @@ public class Inicial extends javax.swing.JFrame {
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         // genera el reporte de la tabla hash
 
-        System.out.println(Proyecto2.tablaHash.generarGraphviz());
+        try {
+           Proyecto2.tablaHash.iniciargenerarGraphviz();;
+        } catch (Exception e) {
+        }
+        
+        //System.out.println(Proyecto2.tablaHash.generarGraphviz());
 
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
@@ -363,9 +449,11 @@ public class Inicial extends javax.swing.JFrame {
                         String apellido = objusuario.get("Apellido").getAsString();
                         String carrera = objusuario.get("Carrera").getAsString();
                         String contraseña = objusuario.get("Password").getAsString();
+                        String cadena_encriptada = this.encode(this.llavesecreta, contraseña);
                         
-                        ObjEstudiante o1 = new ObjEstudiante(carnet, nombre, apellido, carrera, contraseña);
+                        ObjEstudiante o1 = new ObjEstudiante(carnet, nombre, apellido, carrera, cadena_encriptada);
                         
+                        //System.out.println("Insertando: " + carnet);
                         Proyecto2.tablaHash.insertar(o1);                        
                         
                     }
@@ -381,6 +469,21 @@ public class Inicial extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        
+        
+        // genera el reporte arbol AVL
+
+        try {
+           Proyecto2.arbolAVL.iniciargenerarGraphviz();;
+        } catch (Exception e) {
+        }
+        
+        System.out.println("ARBOL NORMAL");
+        System.out.println(Proyecto2.arbolAVL.wenas);
+        
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -437,6 +540,7 @@ public class Inicial extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField jTextField1;

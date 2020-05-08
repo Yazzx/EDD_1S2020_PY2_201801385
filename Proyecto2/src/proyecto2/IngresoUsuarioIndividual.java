@@ -1,6 +1,12 @@
 package proyecto2;
 
+import java.security.MessageDigest;
+import java.util.Arrays;
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import javax.swing.JOptionPane;
+import org.apache.commons.codec.binary.Base64;
 import proyecto2.Objetos.ObjEstudiante;
 
 /**
@@ -15,6 +21,64 @@ public class IngresoUsuarioIndividual extends javax.swing.JFrame {
     public IngresoUsuarioIndividual() {
         initComponents();
     }
+    
+    public String llavesecreta = "EstaClaseSiSale";
+    
+    public String encode(String llavesecreta, String cadena){
+        
+        String holi = "";
+        
+        try {
+            
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            byte[] llaveConstraseña = md5.digest(llavesecreta.getBytes("utf-8"));
+            byte[] llavebytes = Arrays.copyOf(llaveConstraseña, 24);
+            SecretKey key = new SecretKeySpec(llavebytes, "DESede");
+            Cipher cifrado = Cipher.getInstance("DESede");
+            cifrado.init(Cipher.ENCRYPT_MODE, key);
+            
+            byte [] plainTextBytes = cadena.getBytes("utf-8");
+            byte[] buf = cifrado.doFinal(plainTextBytes);
+            byte [] base64 = Base64.encodeBase64(buf);
+            holi = new String(base64);    
+                
+            
+        } catch (Exception e) {
+            
+            System.out.println(e);
+        }
+        
+        
+        return holi;
+        
+    }
+    
+    public String decode(String llavesecreta, String cadena_encriptada){
+    
+        String adios = "";
+    
+        try {
+            
+            byte[] mensaje = Base64.decodeBase64(cadena_encriptada.getBytes("utf-8"));
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            byte[] digestcontraseña = md5.digest(llavesecreta.getBytes("utf-8"));
+            byte[] llavebytes = Arrays.copyOf(digestcontraseña, 24);
+            SecretKey llave = new SecretKeySpec(llavebytes, "DESede");
+            Cipher nocifrado = Cipher.getInstance("DESede");
+            nocifrado.init(Cipher.DECRYPT_MODE, llave);
+            
+            byte[] textoplano = nocifrado.doFinal(mensaje);
+            adios = new String(textoplano, "UTF-8");
+            
+            
+        } catch (Exception e) {
+            
+            System.out.println(e);
+        }
+    
+        return adios;
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -207,7 +271,17 @@ public class IngresoUsuarioIndividual extends javax.swing.JFrame {
         if (jTextField5.getText().equals(jTextField6.getText())) {
 
             String contraseña = jTextField6.getText();
-            ObjEstudiante o1 = new ObjEstudiante(carnet, nombre, apellido, carrera, contraseña);
+            
+            // aca va la encriptacion
+            
+            String cadena_encriptada = this.encode(this.llavesecreta, contraseña);
+            String cadena_desencriptada = this.decode(this.llavesecreta, cadena_encriptada);
+            
+            
+            System.out.println("cadena encriptada:" + cadena_encriptada);
+            //System.out.println("cadena desencriptada:" + cadena_desencriptada);
+            
+            ObjEstudiante o1 = new ObjEstudiante(carnet, nombre, apellido, carrera, cadena_encriptada);
 
             Proyecto2.tablaHash.insertar(o1);
 

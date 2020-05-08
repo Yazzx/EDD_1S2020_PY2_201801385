@@ -5,8 +5,11 @@
  */
 package proyecto2.Estructuras;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import proyecto2.Objetos.ObjEstudiante;
-import proyecto2.Estructuras.ListaSimpleEstudiantes;
 
 /**
  *
@@ -21,14 +24,13 @@ public class TablaHash {
     public TablaHash() {
         tamaño = 45;
         elementos_almacenados = 0;
-        
-        
+
         for (int i = 0; i < tabla.length; i++) {
-            
+
             ListaSimpleEstudiantes hola = new ListaSimpleEstudiantes();
-            tabla[i] = hola;            
+            tabla[i] = hola;
         }
-        
+
     }
 
     public int getElementos_almacenados() {
@@ -47,9 +49,9 @@ public class TablaHash {
         int posicion = (int) lugar;
 
         System.out.println("El estudiante con carnet " + estudiante.getCarnet() + " va al lugar: " + posicion);
-        
+
         tabla[posicion].insertar(estudiante);
-        
+
         this.elementos_almacenados++;
 
     }
@@ -100,6 +102,38 @@ public class TablaHash {
         hola += "\n}";
         return hola;
 
+    }
+
+    public void iniciargenerarGraphviz() throws IOException {
+
+        String wenas = this.generarGraphviz();
+
+        String userHomeFolder = System.getProperty("user.home");
+        File textFile = new File(userHomeFolder, "TablaHash.dot");
+        BufferedWriter out = new BufferedWriter(new FileWriter(textFile));
+        try {
+            
+            out.append(wenas);
+            
+        } finally {
+            out.close();
+        }
+    }
+    
+    public boolean buscarUsuario(long carnet, String contraseña){
+        
+        boolean holi = false;
+        
+        long lugar = carnet % tamaño;
+        int posicion = (int) lugar;
+        
+        if (tabla[posicion].estaVacia()) {
+            return false;
+        }
+        
+        holi = tabla[posicion].buscar(carnet, contraseña);    
+        
+        return holi;
     }
 
 }

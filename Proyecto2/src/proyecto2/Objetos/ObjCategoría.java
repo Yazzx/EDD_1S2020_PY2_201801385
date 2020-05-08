@@ -14,9 +14,11 @@ public class ObjCategoría {
     
     String nombre;
     public ArbolB arbolB;
+    int contalibros;
 
     public ObjCategoría(String nombre) {
         this.nombre = nombre;
+        this.contalibros = 0;
         this.arbolB = null;
     }
 
@@ -26,6 +28,14 @@ public class ObjCategoría {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public int getContalibros() {
+        return contalibros;
+    }
+
+    public void setContalibros(int contalibros) {
+        this.contalibros = contalibros;
     }
     
     

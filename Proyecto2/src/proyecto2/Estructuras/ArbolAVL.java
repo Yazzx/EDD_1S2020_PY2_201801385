@@ -5,6 +5,10 @@
  */
 package proyecto2.Estructuras;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import proyecto2.Objetos.ObjCategoría;
 
 /**
@@ -36,11 +40,14 @@ public class ArbolAVL {
     }
 
     public boolean yaesta = false;
+    public String grafo = "";
+    public String wenas = "";
+    public int contagraphviz = 0;
 
     Nodo raiz;
     Nodo nuevo, actual, auxiliar;
 
-    ArbolAVL() {
+    public ArbolAVL() {
         this.raiz = null;
     }
 
@@ -92,7 +99,6 @@ public class ArbolAVL {
     }
 
     // insertar
-
     public void iniciarInsertar(ObjCategoría cate) {
 
         raiz = insertar(cate, raiz);
@@ -156,13 +162,13 @@ public class ArbolAVL {
     }
 
     public Nodo rotarDobleIzquierdo(Nodo tres) {
-        
+
         tres.izquierda = rotarDerecho(tres.izquierda);
         return rotarIzquierdo(tres);
     }
 
     public Nodo rotarDerecho(Nodo uno) {
-        
+
         Nodo dos = uno.derecha;
         uno.derecha = dos.izquierda;
         dos.izquierda = uno;
@@ -174,10 +180,10 @@ public class ArbolAVL {
     }
 
     public Nodo rotarDobleDerecho(Nodo uno) {
-        
+
         uno.derecha = rotarIzquierdo(uno.derecha);
         return rotarDerecho(uno);
-        
+
     }
 
     // otros
@@ -186,7 +192,7 @@ public class ArbolAVL {
         if (nodo == null) {
             return -1;
         }
-        
+
         // else
         // la altura inicial de un nodo es 0;
         return nodo.altura;
@@ -202,13 +208,45 @@ public class ArbolAVL {
         }
 
     }
-    
+
     // imprimir
-    
-    public String generarGraphviz(){
-        String wenas = "";
-        
-        
-        return wenas;
+    public String generarGraphviz(Nodo raiz, int contador) {
+        if (raiz == null) {
+            grafo += "";
+        } else {
+
+            if (raiz.izquierda != null) {
+
+                grafo += raiz.categoria.getNombre() + " -> "
+                        + raiz.izquierda.categoria.getNombre() + ";\n";
+                generarGraphviz(raiz.izquierda, contador + 1);
+            }
+            if (raiz.derecha != null) {
+                grafo += raiz.categoria.getNombre() + " -> "
+                        + raiz.derecha.categoria.getNombre() + ";\n";
+                generarGraphviz(raiz.derecha, contador + 1);
+            }
+
+        }
+
+        return grafo;
+    }
+
+    public void iniciargenerarGraphviz() throws IOException {
+
+        wenas = "";
+        wenas = this.generarGraphviz(raiz, contagraphviz);
+
+        String userHomeFolder = System.getProperty("user.home");
+        File textFile = new File(userHomeFolder, "TablaHash.dot");
+        BufferedWriter out = new BufferedWriter(new FileWriter(textFile));
+        try {
+            
+            out.append(wenas);
+            
+        } finally {
+            out.close();
+        }
+
     }
 }

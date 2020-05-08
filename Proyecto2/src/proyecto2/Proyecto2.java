@@ -6,6 +6,7 @@
 package proyecto2;
 import com.google.gson.Gson;
 import proyecto2.Estructuras.TablaHash;
+import proyecto2.Estructuras.ArbolAVL;
 
 
 /**
@@ -15,6 +16,8 @@ import proyecto2.Estructuras.TablaHash;
 public class Proyecto2 {
 
     public static TablaHash tablaHash = new TablaHash();
+    public static ArbolAVL arbolAVL = new ArbolAVL();
+    
     public static Inicial ini = new Inicial();
     
     public static void main(String[] args) {
