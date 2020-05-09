@@ -65,12 +65,17 @@ public class ListaSimpleEstudiantes {
    public Nodo primero;
    public Nodo auxiliar, actual;
    int tamaño;
+   ObjEstudiante estudianteEncontrado;
 
-    public ListaSimpleEstudiantes() {
+   public ListaSimpleEstudiantes() {
         
         primero = null;
         this.tamaño = 0;
-    }
+    } 
+   
+   public ObjEstudiante getEstudianteEncontrado() {
+        return estudianteEncontrado;
+    }    
     
     public boolean estaVacia(){
         return primero == null;
@@ -151,6 +156,9 @@ public class ListaSimpleEstudiantes {
                 if (cadena_encriptada.compareTo(actual.getEstudiante().getContraseña()) == 0) {
                     
                     holi = true;
+                    
+                    this.estudianteEncontrado = actual.getEstudiante();
+                    
                     return holi;
                     
                 }
@@ -163,7 +171,7 @@ public class ListaSimpleEstudiantes {
         
         return false;
     }
-   
+    
     public void insertar(ObjEstudiante elemento){
         
         if (this.estaVacia()) {

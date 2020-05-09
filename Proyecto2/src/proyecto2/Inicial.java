@@ -1,10 +1,11 @@
 package proyecto2;
 
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
 
 import java.security.MessageDigest;
 import java.util.Arrays;
@@ -12,8 +13,6 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.codec.binary.Base64;
-
-
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -27,6 +26,8 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
@@ -50,43 +51,64 @@ public class Inicial extends javax.swing.JFrame {
     // constructor
     public Inicial() {
         initComponents();
+
+        String primeraruta = "C:\\Users\\yasmi\\OneDrive\\Escritorio\\PY2\\unnamed.png";
+        meterprimeraimagen(primeraruta);
     }
-    
-    public String encode(String llavesecreta, String cadena){
-        
-        String holi = "";
-        
+
+    public void meterprimeraimagen(String ruta) {
+
+        BufferedImage img = null;
         try {
+            img = ImageIO.read(new File(ruta));
+            Image dimg = img.getScaledInstance(this.jLabel5.getWidth(), this.jLabel5.getHeight(),
+                    Image.SCALE_SMOOTH);
+
+            ImageIcon imageIcon = new ImageIcon(dimg);
             
+            //ImageIcon imageIcon = new ImageIcon(getClass().getClassLoader().getResource("sancarlos.jpg"));
+            
+            this.jLabel5.setIcon(imageIcon);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public String encode(String llavesecreta, String cadena) {
+
+        String holi = "";
+
+        try {
+
             MessageDigest md5 = MessageDigest.getInstance("MD5");
             byte[] llaveConstraseña = md5.digest(llavesecreta.getBytes("utf-8"));
             byte[] llavebytes = Arrays.copyOf(llaveConstraseña, 24);
             SecretKey key = new SecretKeySpec(llavebytes, "DESede");
             Cipher cifrado = Cipher.getInstance("DESede");
             cifrado.init(Cipher.ENCRYPT_MODE, key);
-            
-            byte [] plainTextBytes = cadena.getBytes("utf-8");
+
+            byte[] plainTextBytes = cadena.getBytes("utf-8");
             byte[] buf = cifrado.doFinal(plainTextBytes);
-            byte [] base64 = Base64.encodeBase64(buf);
-            holi = new String(base64);    
-                
-            
+            byte[] base64 = Base64.encodeBase64(buf);
+            holi = new String(base64);
+
         } catch (Exception e) {
-            
+
             System.out.println(e);
         }
-        
-        
+
         return holi;
-        
+
     }
-    
-    public String decode(String llavesecreta, String cadena_encriptada){
-    
+
+    public String decode(String llavesecreta, String cadena_encriptada) {
+
         String adios = "";
-    
+
         try {
-            
+
             byte[] mensaje = Base64.decodeBase64(cadena_encriptada.getBytes("utf-8"));
             MessageDigest md5 = MessageDigest.getInstance("MD5");
             byte[] digestcontraseña = md5.digest(llavesecreta.getBytes("utf-8"));
@@ -94,21 +116,17 @@ public class Inicial extends javax.swing.JFrame {
             SecretKey llave = new SecretKeySpec(llavebytes, "DESede");
             Cipher nocifrado = Cipher.getInstance("DESede");
             nocifrado.init(Cipher.DECRYPT_MODE, llave);
-            
+
             byte[] textoplano = nocifrado.doFinal(mensaje);
             adios = new String(textoplano, "UTF-8");
-            
-            
+
         } catch (Exception e) {
-            
+
             System.out.println(e);
         }
-    
+
         return adios;
     }
-    
-    
-    
 
     // Cosas que no se tocan
     @SuppressWarnings("unchecked")
@@ -132,6 +150,7 @@ public class Inicial extends javax.swing.JFrame {
         jButton8 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
@@ -279,23 +298,27 @@ public class Inicial extends javax.swing.JFrame {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 102, Short.MAX_VALUE)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(16, 16, 16))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 273, Short.MAX_VALUE))
+                .addGap(27, 27, 27))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap(38, Short.MAX_VALUE)
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
@@ -338,9 +361,7 @@ public class Inicial extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -371,20 +392,19 @@ public class Inicial extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // Ingresar a cada usuario
-        
+
         long carnet = Long.parseLong(jTextField2.getText());
         boolean esta = Proyecto2.tablaHash.buscarUsuario(carnet, jTextField1.getText());
-        
+
         if (esta) {
-            
-            System.out.println("entraste :D");
-            
-            
+
+            Proyecto2.estudianteEnUso = Proyecto2.tablaHash.getEstudianteEncontrado();
+
         } else {
             JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos :c",
                     "ATENCION", JOptionPane.WARNING_MESSAGE);
         }
-        
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
@@ -399,10 +419,10 @@ public class Inicial extends javax.swing.JFrame {
         // genera el reporte de la tabla hash
 
         try {
-           Proyecto2.tablaHash.iniciargenerarGraphviz();;
+            Proyecto2.tablaHash.iniciargenerarGraphviz();;
         } catch (Exception e) {
         }
-        
+
         //System.out.println(Proyecto2.tablaHash.generarGraphviz());
 
     }//GEN-LAST:event_jMenuItem3ActionPerformed
@@ -432,57 +452,51 @@ public class Inicial extends javax.swing.JFrame {
                 try {
                     JsonElement fileelement = JsonParser.parseReader(new FileReader(archivo));
                     JsonObject objeto = fileelement.getAsJsonObject();
-                    
+
                     // procesando los gets
-                    
                     JsonArray cositousuarios = objeto.get("Usuarios").getAsJsonArray();
-                    
-                    for(JsonElement eleusuario : cositousuarios){
-                        
+
+                    for (JsonElement eleusuario : cositousuarios) {
+
                         // obtener como objeto
                         JsonObject objusuario = eleusuario.getAsJsonObject();
-                        
+
                         // extraer datos
-                        
                         long carnet = objusuario.get("Carnet").getAsLong();
                         String nombre = objusuario.get("Nombre").getAsString();
                         String apellido = objusuario.get("Apellido").getAsString();
                         String carrera = objusuario.get("Carrera").getAsString();
                         String contraseña = objusuario.get("Password").getAsString();
                         String cadena_encriptada = this.encode(this.llavesecreta, contraseña);
-                        
+
                         ObjEstudiante o1 = new ObjEstudiante(carnet, nombre, apellido, carrera, cadena_encriptada);
-                        
+
                         //System.out.println("Insertando: " + carnet);
-                        Proyecto2.tablaHash.insertar(o1);                        
-                        
+                        Proyecto2.tablaHash.insertar(o1);
+
                     }
-                    
-                    
+
                     System.out.println(Proyecto2.tablaHash.generarGraphviz());
-                    
+
                 } catch (Exception e) {
                 }
-                
-        
+
             } catch (Exception e) {
             }
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        
-        
-        // genera el reporte arbol AVL
 
+        // genera el reporte arbol AVL
         try {
-           Proyecto2.arbolAVL.iniciargenerarGraphviz();;
+            Proyecto2.arbolAVL.iniciargenerarGraphviz();;
         } catch (Exception e) {
         }
-        
+
         System.out.println("ARBOL NORMAL");
         System.out.println(Proyecto2.arbolAVL.wenas);
-        
+
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     /**
@@ -530,6 +544,7 @@ public class Inicial extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;

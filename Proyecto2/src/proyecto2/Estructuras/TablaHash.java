@@ -5,6 +5,7 @@
  */
 package proyecto2.Estructuras;
 
+import java.awt.Desktop;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -20,6 +21,9 @@ public class TablaHash {
     ListaSimpleEstudiantes[] tabla = new ListaSimpleEstudiantes[45];
     int tamaño = 45;
     int elementos_almacenados = 0;
+    public ObjEstudiante estudianteEncontrado;
+
+    
 
     public TablaHash() {
         tamaño = 45;
@@ -31,6 +35,10 @@ public class TablaHash {
             tabla[i] = hola;
         }
 
+    }
+    
+    public ObjEstudiante getEstudianteEncontrado() {
+        return estudianteEncontrado;
     }
 
     public int getElementos_almacenados() {
@@ -108,32 +116,55 @@ public class TablaHash {
 
         String wenas = this.generarGraphviz();
 
+        
         String userHomeFolder = System.getProperty("user.home");
         File textFile = new File(userHomeFolder, "TablaHash.dot");
         BufferedWriter out = new BufferedWriter(new FileWriter(textFile));
         try {
-            
+
             out.append(wenas);
-            
+
         } finally {
             out.close();
+            //Desktop.getDesktop().open(textFile);
         }
+        
+        //acá genero el png
+        try {
+        String arg1 = textFile.getAbsolutePath(); 
+        String arg2 = arg1 + ".png"; 
+        String[] c = {"dot", "-Tpng", arg1, "-o", arg2};
+        Process p = Runtime.getRuntime().exec(c); 
+        
+        File imagen = new File(arg2);
+        Desktop.getDesktop().open(imagen);
+        int err = p.waitFor(); 
+        
+        } catch (Exception e) {
+            
+        }
+
     }
-    
-    public boolean buscarUsuario(long carnet, String contraseña){
-        
+
+    public boolean buscarUsuario(long carnet, String contraseña) {
+
         boolean holi = false;
-        
+
         long lugar = carnet % tamaño;
         int posicion = (int) lugar;
-        
+
         if (tabla[posicion].estaVacia()) {
             return false;
         }
+
+        holi = tabla[posicion].buscar(carnet, contraseña);
         
-        holi = tabla[posicion].buscar(carnet, contraseña);    
-        
+        if (holi) {
+            this.estudianteEncontrado = tabla[posicion].getEstudianteEncontrado();
+        }
+
         return holi;
     }
+    
 
 }
