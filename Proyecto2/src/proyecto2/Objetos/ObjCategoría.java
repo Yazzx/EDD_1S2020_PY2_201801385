@@ -19,6 +19,8 @@ public class ObjCategoría {
     public ObjCategoría(String nombre) {
         this.nombre = nombre;
         this.contalibros = 0;
+        
+        // TODO acá va el new arbol b o así 
         this.arbolB = null;
     }
 

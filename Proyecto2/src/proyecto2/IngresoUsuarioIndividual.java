@@ -133,7 +133,7 @@ public class IngresoUsuarioIndividual extends javax.swing.JFrame {
         jLabel7.setForeground(new java.awt.Color(0, 0, 0));
         jLabel7.setText("Confirma tu contraseña");
 
-        jTextField1.setBackground(new java.awt.Color(255, 255, 255));
+        jTextField1.setBackground(new java.awt.Color(187, 230, 228));
         jTextField1.setForeground(new java.awt.Color(0, 0, 0));
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -144,7 +144,7 @@ public class IngresoUsuarioIndividual extends javax.swing.JFrame {
         jTextField2.setBackground(new java.awt.Color(255, 255, 255));
         jTextField2.setForeground(new java.awt.Color(0, 0, 0));
 
-        jTextField3.setBackground(new java.awt.Color(255, 255, 255));
+        jTextField3.setBackground(new java.awt.Color(187, 230, 228));
         jTextField3.setForeground(new java.awt.Color(0, 0, 0));
 
         jTextField4.setBackground(new java.awt.Color(255, 255, 255));
@@ -160,7 +160,7 @@ public class IngresoUsuarioIndividual extends javax.swing.JFrame {
             }
         });
 
-        jPasswordField1.setBackground(new java.awt.Color(255, 255, 255));
+        jPasswordField1.setBackground(new java.awt.Color(187, 230, 228));
         jPasswordField1.setForeground(new java.awt.Color(0, 0, 0));
         jPasswordField1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 

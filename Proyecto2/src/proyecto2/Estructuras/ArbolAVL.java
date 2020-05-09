@@ -5,6 +5,7 @@
  */
 package proyecto2.Estructuras;
 
+import java.awt.Desktop;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -42,7 +43,7 @@ public class ArbolAVL {
     public boolean yaesta = false;
     public String grafo = "";
     public String wenas = "";
-    public int contagraphviz = 0;
+    public int contagraphviz = 0, supercontador = 0;
 
     Nodo raiz;
     Nodo nuevo, actual, auxiliar;
@@ -68,7 +69,7 @@ public class ArbolAVL {
 
     // buscar
     public void iniciarBuscar(String categoria) {
-
+        this.yaesta = false;
         this.buscar(raiz, categoria);
 
     }
@@ -77,7 +78,7 @@ public class ArbolAVL {
 
         if (raiz == null) {
             yaesta = false;
-            System.out.println(categoria + "si esta");
+            System.out.println(categoria + "no esta");
         } else {
 
             String valor_raiz = raiz.categoria.getNombre();
@@ -102,6 +103,7 @@ public class ArbolAVL {
     public void iniciarInsertar(ObjCategoría cate) {
 
         raiz = insertar(cate, raiz);
+        System.out.println("terminó de insertar :D");
     }
 
     public Nodo insertar(ObjCategoría cate, Nodo raizl) {
@@ -210,6 +212,26 @@ public class ArbolAVL {
     }
 
     // imprimir
+    
+    public void iniciarMostrarArbol(){
+        this.mostrarArbol(raiz, supercontador);
+        System.out.println("\n");
+    }
+    
+    public void mostrarArbol(Nodo raiz, int contador) {
+        if (raiz == null) {
+            return;
+        } else {
+            mostrarArbol(raiz.derecha, contador + 1);
+            for (int i = 0; i < contador; ++i) {
+                System.out.println("    ");
+            }
+            System.out.println(raiz.categoria.getNombre());
+            mostrarArbol(raiz.izquierda, contador + 1);
+        }
+
+    }
+
     public String generarGraphviz(Nodo raiz, int contador) {
         if (raiz == null) {
             grafo += "";
@@ -238,14 +260,29 @@ public class ArbolAVL {
         wenas = this.generarGraphviz(raiz, contagraphviz);
 
         String userHomeFolder = System.getProperty("user.home");
-        File textFile = new File(userHomeFolder, "TablaHash.dot");
+        File textFile = new File(userHomeFolder, "ArbolAVL.dot");
         BufferedWriter out = new BufferedWriter(new FileWriter(textFile));
         try {
-            
+
             out.append(wenas);
-            
+
         } finally {
             out.close();
+        }
+
+        //acá genero el png
+        try {
+            String arg1 = textFile.getAbsolutePath();
+            String arg2 = arg1 + ".png";
+            String[] c = {"dot", "-Tpng", arg1, "-o", arg2};
+            Process p = Runtime.getRuntime().exec(c);
+
+            File imagen = new File(arg2);
+            Desktop.getDesktop().open(textFile);
+            int err = p.waitFor();
+
+        } catch (Exception e) {
+
         }
 
     }

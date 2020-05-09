@@ -86,6 +86,11 @@ public class HomeUsuario extends javax.swing.JFrame {
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Agregar Libro");
         jButton1.setBorder(null);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Mi Perfil"));
@@ -373,6 +378,15 @@ public class HomeUsuario extends javax.swing.JFrame {
 
         JOptionPane.showMessageDialog(null, "Operación realizada correctamente");
     }//GEN-LAST:event_jButton11ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // metiendo libro individual
+        
+        IngresoLibroIndividual i1 = new  IngresoLibroIndividual();
+        i1.setVisible(true);
+        this.setVisible(false);       
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
