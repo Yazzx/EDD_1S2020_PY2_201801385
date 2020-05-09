@@ -11,6 +11,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.codec.binary.Base64;
 import proyecto2.Objetos.ObjEstudiante;
+import proyecto2.Proyecto2;
 
 /**
  *
@@ -24,7 +25,15 @@ public class ListaSimpleEstudiantes {
     public class Nodo {
         
         ObjEstudiante estudiante;
-        Nodo siguiente;
+        Nodo siguiente, anterior;
+
+        public Nodo getAnterior() {
+            return anterior;
+        }
+
+        public void setAnterior(Nodo anterior) {
+            this.anterior = anterior;
+        }
 
         public Nodo(ObjEstudiante estudiante, Nodo siguiente) {
             this.estudiante = estudiante;
@@ -177,6 +186,8 @@ public class ListaSimpleEstudiantes {
         if (this.estaVacia()) {
             
             this.auxiliar = new Nodo(elemento);
+            auxiliar.anterior = null;
+            auxiliar.siguiente = null;
             this.primero = auxiliar;
             tamaño++;
             
@@ -186,6 +197,7 @@ public class ListaSimpleEstudiantes {
         
         this.auxiliar = new Nodo(elemento);
         auxiliar.setSiguiente(this.primero);
+        primero.setAnterior(auxiliar);
         
         this.primero = auxiliar;
         
@@ -232,6 +244,64 @@ public class ListaSimpleEstudiantes {
     public long getPrimerCarnet(){
         
         return this.primero.getEstudiante().getCarnet();
+        
+    }
+    
+    public void eliminarUsuario(long carnet){
+        
+        actual = primero;
+        
+        while (actual != null) {
+            
+            if (actual.getEstudiante().getCarnet() == Proyecto2.estudianteEnUso.getCarnet()) {
+             
+                if (actual == primero) {
+                    
+                    primero = actual.siguiente;
+                    return;
+                    
+                } else if (actual.siguiente == null) {
+                    
+                    actual.anterior.setSiguiente(null);
+                    //actual = null;
+                    
+                    return;
+                    
+                } else {
+                    
+                    actual.anterior.setSiguiente(actual.siguiente);
+                    actual.siguiente.setAnterior(actual.anterior);
+                    
+                    return;
+                    
+                }
+                
+                
+            }
+            
+            
+            actual = actual.siguiente;
+        }
+        
+    }
+    
+    public void editarUsuario(long carnet, ObjEstudiante nuevo_estudiante){
+        
+        actual = primero;
+        
+        while (actual != null) {
+            
+            if (carnet == actual.getEstudiante().getCarnet()) {
+                
+                actual.setEstudiante(nuevo_estudiante);
+                return;
+            }
+            
+            actual = actual.siguiente;
+            
+        }
+        
+        
         
     }
     

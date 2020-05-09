@@ -166,5 +166,28 @@ public class TablaHash {
         return holi;
     }
     
+    public void eliminar(long carnet){
+        
+        long lugar = carnet % tamaño;
+        int posicion = (int) lugar;
+        
+        tabla[posicion].eliminarUsuario(carnet);
+        
+        System.out.println("Has sido eliminado");
+        
+        
+    }
+    
+    public void editarUsuario(long carnet, ObjEstudiante estudiante){
+        
+        long lugar = carnet % tamaño;
+        int posicion = (int) lugar;
+        
+        tabla[posicion].editarUsuario(carnet, estudiante);
+        
+        System.out.println("Has editado tus datos");
+        
+    }
+    
 
 }
