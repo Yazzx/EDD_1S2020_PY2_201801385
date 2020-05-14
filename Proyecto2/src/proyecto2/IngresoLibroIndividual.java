@@ -290,6 +290,8 @@ public class IngresoLibroIndividual extends javax.swing.JFrame {
         if (!Proyecto2.arbolAVL.yaesta) {
             
             ObjCategoría oc1 = new ObjCategoría(categoria);
+            
+            // aqui inserto el libro en el b de la categoría
             Proyecto2.arbolAVL.iniciarInsertar(oc1);
             
             Proyecto2.arbolAVL.iniciarMostrarArbol();

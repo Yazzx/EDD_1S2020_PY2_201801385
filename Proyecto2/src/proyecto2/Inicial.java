@@ -154,7 +154,11 @@ public class Inicial extends javax.swing.JFrame {
         jMenu4 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
+        jMenu7 = new javax.swing.JMenu();
+        jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
+        jMenuItem7 = new javax.swing.JMenuItem();
         jMenu6 = new javax.swing.JMenu();
 
         jMenu1.setText("jMenu1");
@@ -337,13 +341,41 @@ public class Inicial extends javax.swing.JFrame {
         });
         jMenu3.add(jMenuItem3);
 
-        jMenuItem4.setText("Arbol AVL");
+        jMenu7.setText("Arbol AVL");
+
+        jMenuItem5.setText("Arbol");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        jMenu7.add(jMenuItem5);
+
+        jMenuItem4.setText("Pre Orden");
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem4ActionPerformed(evt);
             }
         });
-        jMenu3.add(jMenuItem4);
+        jMenu7.add(jMenuItem4);
+
+        jMenuItem6.setText("En Orden");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        jMenu7.add(jMenuItem6);
+
+        jMenuItem7.setText("Post Orden");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
+        jMenu7.add(jMenuItem7);
+
+        jMenu3.add(jMenu7);
 
         jMenuBar1.add(jMenu3);
 
@@ -472,7 +504,7 @@ public class Inicial extends javax.swing.JFrame {
 
                     }
 
-                    System.out.println(Proyecto2.tablaHash.generarGraphviz());
+                    //System.out.println(Proyecto2.tablaHash.generarGraphviz());
 
                 } catch (Exception e) {
                 }
@@ -482,18 +514,38 @@ public class Inicial extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-
-        // genera el reporte arbol AVL
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+          // genera el reporte arbol AVL
         try {
             Proyecto2.arbolAVL.iniciargenerarGraphviz();;
         } catch (Exception e) {
+            System.out.println(e);
         }
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
 
-        System.out.println("ARBOL NORMAL");
-        System.out.println(Proyecto2.arbolAVL.wenas);
-
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+       try {
+            Proyecto2.arbolAVL.iniciargenerarPreorder();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+       try {
+            Proyecto2.arbolAVL.iniciargenerarEnorder();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        try {
+            Proyecto2.arbolAVL.iniciargenerarPostorder();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -547,11 +599,15 @@ public class Inicial extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
+    private javax.swing.JMenu jMenu7;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPasswordField jPasswordField1;

@@ -5,8 +5,22 @@
  */
 package proyecto2;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import java.io.File;
+import java.io.FileReader;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import proyecto2.Objetos.ObjCategoría;
 import proyecto2.Objetos.ObjEstudiante;
+import proyecto2.Objetos.ObjLibro;
 
 /**
  *
@@ -230,6 +244,11 @@ public class HomeUsuario extends javax.swing.JFrame {
         jButton6.setForeground(new java.awt.Color(255, 255, 255));
         jButton6.setText("Cargar Libros");
         jButton6.setBorder(null);
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
 
         jButton7.setBackground(new java.awt.Color(8, 75, 131));
         jButton7.setForeground(new java.awt.Color(255, 255, 255));
@@ -381,12 +400,88 @@ public class HomeUsuario extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // metiendo libro individual
-        
-        IngresoLibroIndividual i1 = new  IngresoLibroIndividual();
+
+        IngresoLibroIndividual i1 = new IngresoLibroIndividual();
         i1.setVisible(true);
-        this.setVisible(false);       
-        
+        this.setVisible(false);
+
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+
+        JFileChooser dlg = new JFileChooser();
+        dlg.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        FileFilter filtro = new FileNameExtensionFilter("Archivos JSON (*.json)", "json");
+        dlg.setFileFilter(filtro);
+
+        //int opcion = dlg.showSaveDialog(jPanel1);
+        int opcion = dlg.showOpenDialog(jPanel1);
+
+        if (opcion == JFileChooser.APPROVE_OPTION) {
+
+            try {
+
+                File archivo = dlg.getSelectedFile();
+                if ((archivo == null) || (archivo.getName().equals(""))) {
+                    JOptionPane.showMessageDialog(this, "Nombre de archivo inválido", "Nombre de archivo inválido", JOptionPane.ERROR_MESSAGE);
+                }
+
+                Reader reader = Files.newBufferedReader(Paths.get(archivo.getAbsolutePath()));
+
+                try {
+                    JsonElement fileelement = JsonParser.parseReader(new FileReader(archivo));
+                    JsonObject objeto = fileelement.getAsJsonObject();
+
+                    // procesando los gets
+                    JsonArray cositousuarios = objeto.get("libros").getAsJsonArray();
+
+                    for (JsonElement eleusuario : cositousuarios) {
+
+                        // obtener como objeto
+                        JsonObject objlibro = eleusuario.getAsJsonObject();
+
+                        long isbn = objlibro.get("ISBN").getAsLong();
+                        String titulo = objlibro.get("Titulo").getAsString();
+                        String autor = objlibro.get("Autor").getAsString();
+                        String editorial = objlibro.get("Editorial").getAsString();
+                        int año = objlibro.get("Año").getAsInt();
+                        String edicion = objlibro.get("Edicion").getAsString();
+                        String categoria = objlibro.get("Categoria").getAsString();
+                        String idioma = objlibro.get("Idioma").getAsString();
+
+                        ObjLibro o1 = new ObjLibro(Proyecto2.estudianteEnUso.getCarnet(), isbn, titulo,
+                                autor, editorial, año, edicion, categoria, idioma);
+
+                        Proyecto2.arbolAVL.iniciarBuscar(categoria);
+                        if (!Proyecto2.arbolAVL.yaesta) {
+
+                            ObjCategoría oc1 = new ObjCategoría(categoria);
+
+                            // aqui inserto el libro en el b de la categoría
+                            Proyecto2.arbolAVL.iniciarInsertar(oc1);
+
+                            
+
+                        } else {
+
+                            System.out.println("Ya está la categoría. "
+                                    + "acá meto la cosa de una al arbol b");
+
+                        }
+                    }
+
+                    Proyecto2.arbolAVL.iniciarMostrarArbol();
+                    //Proyecto2.arbolAVL.iniciargenerarGraphviz();
+
+                } catch (Exception e) {
+                }
+
+            } catch (Exception e) {
+            }
+        }
+
+
+    }//GEN-LAST:event_jButton6ActionPerformed
 
     /**
      * @param args the command line arguments

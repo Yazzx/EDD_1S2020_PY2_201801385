@@ -10,6 +10,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import proyecto2.Objetos.ObjCategoría;
 
 /**
@@ -41,9 +42,10 @@ public class ArbolAVL {
     }
 
     public boolean yaesta = false;
-    public String grafo = "";
+    public String grafo = "", pre = "", en = "", post = "";
     public String wenas = "";
     public int contagraphviz = 0, supercontador = 0;
+    public String pathimg;
 
     Nodo raiz;
     Nodo nuevo, actual, auxiliar;
@@ -78,7 +80,7 @@ public class ArbolAVL {
 
         if (raiz == null) {
             yaesta = false;
-            System.out.println(categoria + "no esta");
+            System.out.println(categoria + " no esta");
         } else {
 
             String valor_raiz = raiz.categoria.getNombre();
@@ -89,10 +91,10 @@ public class ArbolAVL {
                 buscar(raiz.derecha, categoria);
             } else if (categoria.compareTo(valor_raiz) == 0) {
                 yaesta = true;
-                System.out.println(categoria + "si esta");
+                System.out.println(categoria + " si esta");
             } else {
                 yaesta = false;
-                System.out.println(categoria + "no esta");
+                System.out.println(categoria + " no esta");
             }
 
         }
@@ -212,19 +214,18 @@ public class ArbolAVL {
     }
 
     // imprimir
-    
-    public void iniciarMostrarArbol(){
+    public void iniciarMostrarArbol() {
         this.mostrarArbol(raiz, supercontador);
         System.out.println("\n");
     }
-    
+
     public void mostrarArbol(Nodo raiz, int contador) {
         if (raiz == null) {
             return;
         } else {
             mostrarArbol(raiz.derecha, contador + 1);
             for (int i = 0; i < contador; ++i) {
-                System.out.println("    ");
+                System.out.print("     ");
             }
             System.out.println(raiz.categoria.getNombre());
             mostrarArbol(raiz.izquierda, contador + 1);
@@ -232,7 +233,7 @@ public class ArbolAVL {
 
     }
 
-    public String generarGraphviz(Nodo raiz, int contador) {
+    public String generarGraphviz(Nodo raiz) {
         if (raiz == null) {
             grafo += "";
         } else {
@@ -241,12 +242,12 @@ public class ArbolAVL {
 
                 grafo += raiz.categoria.getNombre() + " -> "
                         + raiz.izquierda.categoria.getNombre() + ";\n";
-                generarGraphviz(raiz.izquierda, contador + 1);
+                generarGraphviz(raiz.izquierda);
             }
             if (raiz.derecha != null) {
                 grafo += raiz.categoria.getNombre() + " -> "
                         + raiz.derecha.categoria.getNombre() + ";\n";
-                generarGraphviz(raiz.derecha, contador + 1);
+                generarGraphviz(raiz.derecha);
             }
 
         }
@@ -256,15 +257,22 @@ public class ArbolAVL {
 
     public void iniciargenerarGraphviz() throws IOException {
 
-        wenas = "";
-        wenas = this.generarGraphviz(raiz, contagraphviz);
+        this.grafo = "";
+        String hola = this.generarGraphviz(raiz);
+
+        String holiwi = "";
+        holiwi = "digraph G {\n";        
+        holiwi += hola;
+        holiwi += "\n}";
+
+        System.out.println("generando dot");
 
         String userHomeFolder = System.getProperty("user.home");
         File textFile = new File(userHomeFolder, "ArbolAVL.dot");
         BufferedWriter out = new BufferedWriter(new FileWriter(textFile));
         try {
 
-            out.append(wenas);
+            out.append(holiwi);
 
         } finally {
             out.close();
@@ -274,15 +282,248 @@ public class ArbolAVL {
         try {
             String arg1 = textFile.getAbsolutePath();
             String arg2 = arg1 + ".png";
+            this.pathimg = arg2;
+            System.out.println("generando png");
             String[] c = {"dot", "-Tpng", arg1, "-o", arg2};
             Process p = Runtime.getRuntime().exec(c);
 
-            File imagen = new File(arg2);
-            Desktop.getDesktop().open(textFile);
-            int err = p.waitFor();
+//            System.out.println("abriendo");
+//            File imagen = new File(arg2);
+//            Desktop.getDesktop().open(imagen);
+//            int err = p.waitFor();
+//            System.out.println("fin de abrir");
+            TimeUnit.SECONDS.sleep(2);
+            
+            this.generarPNG(arg2);
 
         } catch (Exception e) {
 
+            System.out.println(e);
+
+        }
+
+    }
+
+    public String generarPreorder(Nodo raiz) {
+
+        // raiz izq der
+        if (raiz == null) {
+            pre += "";
+        } else {
+            pre += raiz.categoria.getNombre() + " -> ";
+            if (raiz.izquierda != null) {
+                generarPreorder(raiz.izquierda);
+            }
+            if (raiz.derecha != null) {
+                generarPreorder(raiz.derecha);
+            }
+        }
+
+        return pre;
+
+    }
+
+    public void iniciargenerarPreorder() throws IOException {
+
+        this.pre = "";
+        String hola = this.generarPreorder(raiz);
+        hola = hola.substring(0, hola.length() - 1);
+        hola = hola.substring(0, hola.length() - 1);
+        hola = hola.substring(0, hola.length() - 1);
+        hola = hola.substring(0, hola.length() - 1);
+        hola += ";";
+
+        String holiwi = "";
+        holiwi = "digraph G {\n";
+        holiwi += "rankdir=\"LR\";\n\n";
+        holiwi += hola;
+        holiwi += "\n}";
+
+        System.out.println("generando dot");
+
+        String userHomeFolder = System.getProperty("user.home");
+        File textFile = new File(userHomeFolder, "ArbolPreorder.dot");
+        BufferedWriter out = new BufferedWriter(new FileWriter(textFile));
+        try {
+
+            out.append(holiwi);
+
+        } finally {
+            out.close();
+        }
+
+        //acá genero el png
+        try {
+            String arg1 = textFile.getAbsolutePath();
+            String arg2 = arg1 + ".png";
+            System.out.println("generando png");
+            String[] c = {"dot", "-Tpng", arg1, "-o", arg2};
+            Process p = Runtime.getRuntime().exec(c);
+
+            TimeUnit.SECONDS.sleep(2);
+
+            this.generarPNG(arg2);
+
+        } catch (Exception e) {
+
+            System.out.println(e);
+
+        }
+
+    }
+
+    public String generarEnorder(Nodo raiz) {
+
+        //  izq raiz der
+        if (raiz == null) {
+            en += "";
+        } else {
+
+            if (raiz.izquierda != null) {
+                generarEnorder(raiz.izquierda);
+            }
+            en += raiz.categoria.getNombre() + " -> ";
+
+            if (raiz.derecha != null) {
+                generarEnorder(raiz.derecha);
+            }
+        }
+
+        return en;
+
+    }
+
+    public void iniciargenerarEnorder() throws IOException {
+
+        this.en = "";
+        String hola = this.generarEnorder(raiz);
+        hola = hola.substring(0, hola.length() - 1);
+        hola = hola.substring(0, hola.length() - 1);
+        hola = hola.substring(0, hola.length() - 1);
+        hola = hola.substring(0, hola.length() - 1);
+        hola += ";";
+
+        String holiwi = "";
+        holiwi = "digraph G {\n";
+        holiwi += "rankdir=\"LR\";\n\n";
+        holiwi += hola;
+        holiwi += "\n}";
+
+        System.out.println("generando dot");
+
+        String userHomeFolder = System.getProperty("user.home");
+        File textFile = new File(userHomeFolder, "ArbolEnorder.dot");
+        BufferedWriter out = new BufferedWriter(new FileWriter(textFile));
+        try {
+
+            out.append(holiwi);
+
+        } finally {
+            out.close();
+        }
+
+        //acá genero el png
+        try {
+            String arg1 = textFile.getAbsolutePath();
+            String arg2 = arg1 + ".png";
+            this.pathimg = arg2;
+            System.out.println("generando png");
+            String[] c = {"dot", "-Tpng", arg1, "-o", arg2};
+            Process p = Runtime.getRuntime().exec(c);
+            
+            TimeUnit.SECONDS.sleep(2);
+
+            this.generarPNG(arg2);
+
+        } catch (Exception e) {
+
+            System.out.println(e);
+
+        }
+
+    }
+
+    public String generarPostorder(Nodo raiz) {
+
+        if (raiz == null) {
+            post += "";
+        } else {
+
+            if (raiz.izquierda != null) {
+                generarPostorder(raiz.izquierda);
+            }
+
+            if (raiz.derecha != null) {
+                generarPostorder(raiz.derecha);
+            }
+            post += raiz.categoria.getNombre() + " -> ";
+        }
+
+        return post;
+
+    }
+
+    public void iniciargenerarPostorder() throws IOException {
+
+        this.post = "";
+        String hola = this.generarPostorder(raiz);
+        hola = hola.substring(0, hola.length() - 1);
+        hola = hola.substring(0, hola.length() - 1);
+        hola = hola.substring(0, hola.length() - 1);
+        hola = hola.substring(0, hola.length() - 1);
+        hola += ";";
+
+        String holiwi = "";
+        holiwi = "digraph G {\n";
+        holiwi += "rankdir=\"LR\";\n\n";
+        holiwi += hola;
+        holiwi += "\n}";
+
+        System.out.println("generando dot");
+
+        String userHomeFolder = System.getProperty("user.home");
+        File textFile = new File(userHomeFolder, "ArbolPostorder.dot");
+        BufferedWriter out = new BufferedWriter(new FileWriter(textFile));
+        try {
+
+            out.append(holiwi);
+
+        } finally {
+            out.close();
+        }
+
+        //acá genero el png
+        try {
+            String arg1 = textFile.getAbsolutePath();
+            String arg2 = arg1 + ".png";
+            this.pathimg = arg2;
+            System.out.println("generando png");
+            String[] c = {"dot", "-Tpng", arg1, "-o", arg2};
+            Process p = Runtime.getRuntime().exec(c);
+            
+            TimeUnit.SECONDS.sleep(2);
+
+            this.generarPNG(arg2);
+
+        } catch (Exception e) {
+
+            System.out.println(e);
+
+        }
+
+    }
+
+    public void generarPNG(String arg2) {
+
+        try {
+
+            System.out.println("abriendo");
+            File imagen = new File(arg2);
+            Desktop.getDesktop().open(imagen);
+            //System.out.println("fin de abrir");
+
+        } catch (Exception e) {
+            System.out.println(e);
         }
 
     }
