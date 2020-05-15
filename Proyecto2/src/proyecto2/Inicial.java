@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -49,12 +50,11 @@ public class Inicial extends javax.swing.JFrame {
         initComponents();
 
         String primeraruta = "C:\\Users\\yasmi\\OneDrive\\Escritorio\\PY2\\unnamed.png";
-        meterprimeraimagen(primeraruta);
-        
-        
+        meterimagen(primeraruta);
+
     }
 
-    public void meterprimeraimagen(String ruta) {
+    public void meterimagen(String ruta) {
 
         BufferedImage img = null;
         try {
@@ -63,9 +63,8 @@ public class Inicial extends javax.swing.JFrame {
                     Image.SCALE_SMOOTH);
 
             ImageIcon imageIcon = new ImageIcon(dimg);
-            
+
             //ImageIcon imageIcon = new ImageIcon(getClass().getClassLoader().getResource("sancarlos.jpg"));
-            
             this.jLabel5.setIcon(imageIcon);
 
         } catch (IOException e) {
@@ -152,6 +151,7 @@ public class Inicial extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu2 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
+        jMenuItem8 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenu7 = new javax.swing.JMenu();
@@ -329,6 +329,15 @@ public class Inicial extends javax.swing.JFrame {
         jMenuBar1.add(jMenu2);
 
         jMenu4.setText("Catálogo");
+
+        jMenuItem8.setText("Ver Catálogo");
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem8);
+
         jMenuBar1.add(jMenu4);
 
         jMenu3.setText("Reportes");
@@ -420,10 +429,10 @@ public class Inicial extends javax.swing.JFrame {
         if (esta) {
 
             Proyecto2.estudianteEnUso = Proyecto2.tablaHash.getEstudianteEncontrado();
-            
+
             this.jTextField2.setText("");
             this.jPasswordField1.setText("");
-            
+
             HomeUsuario u1 = new HomeUsuario();
             u1.setVisible(true);
             this.setVisible(false);
@@ -448,6 +457,9 @@ public class Inicial extends javax.swing.JFrame {
 
         try {
             Proyecto2.tablaHash.iniciargenerarGraphviz();;
+            TimeUnit.SECONDS.sleep(2);
+            this.meterimagen(Proyecto2.tablaHash.rutapng);
+
         } catch (Exception e) {
         }
 
@@ -505,35 +517,45 @@ public class Inicial extends javax.swing.JFrame {
                     }
 
                     //System.out.println(Proyecto2.tablaHash.generarGraphviz());
-
                 } catch (Exception e) {
                 }
 
             } catch (Exception e) {
             }
+            
+            System.out.println("\n\n\n\n\n");
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-          // genera el reporte arbol AVL
+        // genera el reporte arbol AVL
         try {
             Proyecto2.arbolAVL.iniciargenerarGraphviz();;
+            
+            TimeUnit.SECONDS.sleep(2);
+            this.meterimagen(Proyecto2.arbolAVL.rutanormal);
         } catch (Exception e) {
             System.out.println(e);
         }
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-       try {
+        try {
             Proyecto2.arbolAVL.iniciargenerarPreorder();
+            
+            TimeUnit.SECONDS.sleep(2);
+            this.meterimagen(Proyecto2.arbolAVL.rutapre);
         } catch (Exception e) {
             System.out.println(e);
         }
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
-       try {
+        try {
             Proyecto2.arbolAVL.iniciargenerarEnorder();
+            
+            TimeUnit.SECONDS.sleep(2);
+            this.meterimagen(Proyecto2.arbolAVL.rutaen);
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -542,10 +564,17 @@ public class Inicial extends javax.swing.JFrame {
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
         try {
             Proyecto2.arbolAVL.iniciargenerarPostorder();
+            
+            TimeUnit.SECONDS.sleep(2);
+            this.meterimagen(Proyecto2.arbolAVL.rutapost);
         } catch (Exception e) {
             System.out.println(e);
         }
     }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+        // Aquí pongo la lista de libros
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -608,6 +637,7 @@ public class Inicial extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPasswordField jPasswordField1;

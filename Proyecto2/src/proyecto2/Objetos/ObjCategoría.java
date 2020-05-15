@@ -14,14 +14,14 @@ public class ObjCategoría {
     
     String nombre;
     public ArbolB arbolB;
-    int contalibros;
+    public int contalibros;
 
     public ObjCategoría(String nombre) {
         this.nombre = nombre;
         this.contalibros = 0;
         
         // TODO acá va el new arbol b o así 
-        this.arbolB = null;
+        this.arbolB = new ArbolB();
     }
 
     public String getNombre() {
@@ -40,7 +40,15 @@ public class ObjCategoría {
         this.contalibros = contalibros;
     }
     
+    public void insertarenB(ObjLibro libro){
+        this.arbolB.insertar(libro);
+        contalibros++;
+        System.out.println("Inserción exitosa de: " + libro.getTitulo());
+    }
     
+    public void imprimirB(){
+        this.arbolB.iniciarImprimir();
+    }
     
     
 }

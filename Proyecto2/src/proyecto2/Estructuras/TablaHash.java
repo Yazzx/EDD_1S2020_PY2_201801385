@@ -22,6 +22,7 @@ public class TablaHash {
     int tamaño = 45;
     int elementos_almacenados = 0;
     public ObjEstudiante estudianteEncontrado;
+    public String rutapng = "";
 
     
 
@@ -139,6 +140,7 @@ public class TablaHash {
         File imagen = new File(arg2);
         Desktop.getDesktop().open(imagen);
         int err = p.waitFor(); 
+        this.rutapng = arg2;
         
         } catch (Exception e) {
             

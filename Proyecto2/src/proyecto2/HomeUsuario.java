@@ -455,17 +455,46 @@ public class HomeUsuario extends javax.swing.JFrame {
                         Proyecto2.arbolAVL.iniciarBuscar(categoria);
                         if (!Proyecto2.arbolAVL.yaesta) {
 
+                            // si la categoría no existe todavía
+                            // aqui inserto el libro en el b de la categoría
                             ObjCategoría oc1 = new ObjCategoría(categoria);
 
-                            // aqui inserto el libro en el b de la categoría
-                            Proyecto2.arbolAVL.iniciarInsertar(oc1);
+                            try {
+                                oc1.insertarenB(o1);
+//                                System.out.println("imprimiendo B de " + categoria);
+//                                
+//                                oc1.imprimirB();
+                            } catch (Exception e) {
 
-                            
+                                System.out.println("Algo pasó insertando primera categoría " + e);
+                                e.printStackTrace();
+
+                            }
+
+                            Proyecto2.arbolAVL.iniciarInsertar(oc1);
+                            System.out.println("\n\n");
 
                         } else {
 
-                            System.out.println("Ya está la categoría. "
-                                    + "acá meto la cosa de una al arbol b");
+
+                            try {
+                                
+                                ObjCategoría uno = Proyecto2.arbolAVL.devolver_cate;
+                                System.out.println("devolví " + uno.getNombre());
+                                uno.insertarenB(o1);
+
+                                System.out.println("imprimiendo B de " + categoria);
+
+                                uno.imprimirB();
+
+                                System.out.println("\n\n");
+                                
+                            } catch (Exception e) {
+
+                                //System.out.println("Algo pasó insertando en el B  " + e);
+                                e.printStackTrace();
+
+                            }
 
                         }
                     }
@@ -475,7 +504,7 @@ public class HomeUsuario extends javax.swing.JFrame {
 
                 } catch (Exception e) {
                 }
-
+//
             } catch (Exception e) {
             }
         }

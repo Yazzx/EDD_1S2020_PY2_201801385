@@ -13,6 +13,7 @@ import org.apache.commons.codec.binary.Base64;
 import proyecto2.Objetos.ObjEstudiante;
 import proyecto2.Estructuras.TablaHash;
 import proyecto2.Estructuras.ArbolAVL;
+import proyecto2.Estructuras.ArbolB;
 
 
 /**

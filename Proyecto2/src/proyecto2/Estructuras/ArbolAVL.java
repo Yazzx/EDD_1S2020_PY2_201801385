@@ -46,6 +46,9 @@ public class ArbolAVL {
     public String wenas = "";
     public int contagraphviz = 0, supercontador = 0;
     public String pathimg;
+    public String rutanormal = "", rutapre = "", rutaen = "", rutapost = "";
+    public Nodo devolver = null;
+    public ObjCategoría devolver_cate = null;
 
     Nodo raiz;
     Nodo nuevo, actual, auxiliar;
@@ -72,6 +75,9 @@ public class ArbolAVL {
     // buscar
     public void iniciarBuscar(String categoria) {
         this.yaesta = false;
+        this.devolver = null;
+        this.devolver_cate = null;
+
         this.buscar(raiz, categoria);
 
     }
@@ -80,7 +86,9 @@ public class ArbolAVL {
 
         if (raiz == null) {
             yaesta = false;
-            System.out.println(categoria + " no esta");
+            this.devolver = null;
+            this.devolver_cate = null;
+            //System.out.println(categoria + " no esta");
         } else {
 
             String valor_raiz = raiz.categoria.getNombre();
@@ -91,10 +99,12 @@ public class ArbolAVL {
                 buscar(raiz.derecha, categoria);
             } else if (categoria.compareTo(valor_raiz) == 0) {
                 yaesta = true;
+                this.devolver = raiz;
+                this.devolver_cate = raiz.categoria;
                 System.out.println(categoria + " si esta");
             } else {
                 yaesta = false;
-                System.out.println(categoria + " no esta");
+                //  System.out.println(categoria + " no esta");
             }
 
         }
@@ -261,7 +271,8 @@ public class ArbolAVL {
         String hola = this.generarGraphviz(raiz);
 
         String holiwi = "";
-        holiwi = "digraph G {\n";        
+        holiwi = "digraph G {\n";
+        holiwi += "node [shape=box];\n\n";
         holiwi += hola;
         holiwi += "\n}";
 
@@ -286,14 +297,10 @@ public class ArbolAVL {
             System.out.println("generando png");
             String[] c = {"dot", "-Tpng", arg1, "-o", arg2};
             Process p = Runtime.getRuntime().exec(c);
+            this.rutanormal = arg2;
 
-//            System.out.println("abriendo");
-//            File imagen = new File(arg2);
-//            Desktop.getDesktop().open(imagen);
-//            int err = p.waitFor();
-//            System.out.println("fin de abrir");
             TimeUnit.SECONDS.sleep(2);
-            
+
             this.generarPNG(arg2);
 
         } catch (Exception e) {
@@ -335,7 +342,7 @@ public class ArbolAVL {
 
         String holiwi = "";
         holiwi = "digraph G {\n";
-        holiwi += "rankdir=\"LR\";\n\n";
+        holiwi += "rankdir=\"LR\";\n\nnode [shape=box];\n\n";
         holiwi += hola;
         holiwi += "\n}";
 
@@ -359,6 +366,7 @@ public class ArbolAVL {
             System.out.println("generando png");
             String[] c = {"dot", "-Tpng", arg1, "-o", arg2};
             Process p = Runtime.getRuntime().exec(c);
+            this.rutapre = arg2;
 
             TimeUnit.SECONDS.sleep(2);
 
@@ -405,7 +413,7 @@ public class ArbolAVL {
 
         String holiwi = "";
         holiwi = "digraph G {\n";
-        holiwi += "rankdir=\"LR\";\n\n";
+        holiwi += "rankdir=\"LR\";\n\nnode [shape=box];\n\n";
         holiwi += hola;
         holiwi += "\n}";
 
@@ -430,7 +438,8 @@ public class ArbolAVL {
             System.out.println("generando png");
             String[] c = {"dot", "-Tpng", arg1, "-o", arg2};
             Process p = Runtime.getRuntime().exec(c);
-            
+            this.rutaen = arg2;
+
             TimeUnit.SECONDS.sleep(2);
 
             this.generarPNG(arg2);
@@ -475,7 +484,7 @@ public class ArbolAVL {
 
         String holiwi = "";
         holiwi = "digraph G {\n";
-        holiwi += "rankdir=\"LR\";\n\n";
+        holiwi += "rankdir=\"LR\";\n\nnode [shape=box];\n\n";
         holiwi += hola;
         holiwi += "\n}";
 
@@ -500,7 +509,8 @@ public class ArbolAVL {
             System.out.println("generando png");
             String[] c = {"dot", "-Tpng", arg1, "-o", arg2};
             Process p = Runtime.getRuntime().exec(c);
-            
+            this.rutapost = arg2;
+
             TimeUnit.SECONDS.sleep(2);
 
             this.generarPNG(arg2);

@@ -9,13 +9,14 @@ package proyecto2.Objetos;
  *
  * @author yasmi
  */
-public class ObjLibro {
+public class ObjLibro{
     
     long usuario_dueño;
     long isbn;
     String titulo, autor, editorial;
     int año;
     String edicion, categoría, idioma;
+    public String isbnstring;
 
     public ObjLibro(long usuario_dueño, long isbn, String titulo, String autor, String editorial, int año, String edicion, String categoría, String idioma) {
         this.usuario_dueño = usuario_dueño;
@@ -27,7 +28,9 @@ public class ObjLibro {
         this.edicion = edicion;
         this.categoría = categoría;
         this.idioma = idioma;
+        this.isbnstring = "" + isbn;
     }
+
 
     public long getUsuario_dueño() {
         return usuario_dueño;
