@@ -10,7 +10,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.concurrent.TimeUnit;
@@ -20,11 +19,10 @@ import proyecto2.Objetos.ObjLibro;
  *
  * @author yasmi
  */
-public class ArbolB {
+public class ArbolB2 {
 
     public String grafo = "", rutab = "";
-    public int contanodos = 0, contagrafos = 0;
-    public ArrayList listaB = new ArrayList();
+    public int contanodos = 0;
 
     class Nodo {
 
@@ -66,8 +64,8 @@ public class ArbolB {
             }
             return -1;
         }
-
-        // Otros
+        
+          // Otros
         public void imprimir() {
 
             int j = 0;
@@ -80,7 +78,7 @@ public class ArbolB {
                 }
 
                 if ((i <= 3) && (libro[i] != null)) {
-                    System.out.print(libro[i].getIsbn() + " | ");
+                    System.out.print(libro[i].getTitulo() + " | ");
                 }
 
             }
@@ -103,11 +101,11 @@ public class ArbolB {
         }
     }
 
-    Nodo raizt;
+    Nodo raiz;
 
-    public ArbolB() {
+    public ArbolB2() {
 
-        this.raizt = new Nodo(true);
+        this.raiz = new Nodo(true);
 
     }
 
@@ -115,43 +113,25 @@ public class ArbolB {
 
         // el nodo dos es el lleno
         Nodo tres = new Nodo(dos.isHoja_inicial());
-        // cambio de contador
-        tres.setContador(1);
+        tres.setContador(2);
 
         // copio los ultimos dos al nodo 3
-//        for (int i = 0; i < 2; i++) {
-//            tres.libro[i] = dos.libro[i + 2];
-//            //dos.libro[i+2] = null;
-//        }
-
-        for (int i = 0; i < 1; i++) {
-            tres.libro[i] = dos.libro[i + 3];
-            //dos.libro[i+2] = null;
-        }
-
-        for (int i = 0; i < 1; i++) {
-            dos.libro[i + 3] = null;
+        for (int i = 0; i < 2; i++) {
+            tres.libro[i] = dos.libro[i + 2];
         }
 
         // si el nodo tiene hijos
         if (!dos.isHoja_inicial()) {
 
-            // copio los ultimos dos links al nodo tres
-            for (int i = 0; i < 2; i++) {
+            // copio los ultimos tres links al nodo tres
+            for (int i = 0; i < 3; i++) {
                 tres.link[i] = dos.link[i + 3];
-                //dos.link[i+3] = null;
             }
-            for (int i = 0; i < 2; i++) {
-                dos.link[i + 3] = null;
-            }
-
         }
 
         // ver si es dos o tres
         dos.setContador(2);
 
-        // para esto estoy debugueando
-        // no pasa nada? 
         for (int i = uno.getContador(); i >= posicion + 1; i--) {
             uno.link[i + 1] = uno.link[i];
         }
@@ -162,17 +142,15 @@ public class ArbolB {
             uno.libro[j + 1] = uno.libro[j];
         }
 
-        // estoo lo cambio a unooooo
         uno.libro[posicion] = dos.libro[2];
-                
         uno.contador++;
     }
 
     public void iniciarInsertar(ObjLibro libro) {
-        Nodo raiz = this.raizt;
+        Nodo raiz = this.raiz;
         if (raiz.getContador() == 4) {
-            Nodo auxiliar = new Nodo();
-            this.raizt = auxiliar;
+            Nodo auxiliar = new Nodo(false);
+            raiz = auxiliar;
             auxiliar.setHoja_inicial(false);
             auxiliar.setContador(0);
             auxiliar.link[0] = raiz;
@@ -184,7 +162,7 @@ public class ArbolB {
         }
     }
 
-    final public void insertar(Nodo uno, ObjLibro libro) {
+    public void insertar(Nodo uno, ObjLibro libro) {
 
         if (uno.isHoja_inicial()) {
             int i = 0;
@@ -198,7 +176,6 @@ public class ArbolB {
             for (i = uno.getContador() - 1; i >= 0 && libro.getIsbn() < uno.libro[i].getIsbn(); i--) {
                 // no hago nada, solo es para ver en donde queda el i
             }
-            ;
             i++;
             Nodo aux = uno.link[i];
             if (aux.getContador() == 4) {
@@ -212,74 +189,14 @@ public class ArbolB {
         }
 
     }
-    
-    // otros
-
-    public void showear(Nodo uno) {
-        assert (uno == null);
-        for (int i = 0; i < uno.getContador(); i++) {
-            System.out.print(uno.libro[i].getIsbn() + " |");
-        }
-        System.out.println("");
-        if (!uno.isHoja_inicial()) {
-            for (int i = 0; i < uno.getContador() + 1; i++) {
-                showear(uno.link[i]);
-            }
-        }
-    }
 
     public void iniciarImprimir() {
-
-        this.showear(raizt);
-//        if (this.raizt != null) {
-//            this.raizt.imprimir();
-//        } else {
-//            System.out.println("El arbol está vacio");
-//        }
-//        System.out.println("");
-
-    }
-
-    public String grafiz(Nodo uno) {
-        if (uno == null) {
-            grafo += "";
-            return grafo;
+        if (this.raiz != null) {
+            this.raiz.imprimir();
+        } else {
+            System.out.println("El arbol está vacio");
         }
-
-        contagrafos++;
-        String str = Integer.toString(contagrafos);
-
-        grafo += str + " [shape=record    label=\"";
-
-        for (int i = 0; i < uno.getContador(); i++) {
-            
-            String isbn = Long.toString(uno.libro[i].getIsbn());
-            grafo += isbn + "\\n" + uno.libro[i].getAutor() + "|";
-        }
-        
-        grafo = grafo.substring(0, str.length() - 1);
-        grafo += "\"];\n";
-        
-        if (!uno.isHoja_inicial()) {
-            
-            int nodos = uno.getContador()+1;
-            
-            for (int i = contagrafos; i <= contagrafos+nodos; i++) {
-                
-                String dooos = Integer.toString(contagrafos);
-
-                    grafo += dooos + "->" + i + ";\n";
-                
-            }
-            
-            
-            for (int i = 0; i < uno.getContador() + 1; i++) {
-                grafiz(uno.link[i]);
-            }
-        }
-        
-        return grafo;
-
+        System.out.println("");
     }
 
     public String generarGraphviz(Nodo raiz) {
@@ -335,7 +252,7 @@ public class ArbolB {
     public void iniciarGenerarGraphviz() throws IOException {
 
         this.grafo = "";
-        String alo = this.grafiz(this.raizt);
+        String alo = this.generarGraphviz(this.raiz);
 
         String holiwi = "";
         holiwi = "digraph G {\n";
@@ -391,4 +308,5 @@ public class ArbolB {
         }
 
     }
+
 }

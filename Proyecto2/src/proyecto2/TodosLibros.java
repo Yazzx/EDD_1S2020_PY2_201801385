@@ -5,7 +5,16 @@
  */
 package proyecto2;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 import proyecto2.Objetos.ObjCategoría;
 
@@ -48,6 +57,24 @@ public class TodosLibros extends javax.swing.JFrame {
 
     }
 
+    public void meterimagen(String ruta) {
+
+        BufferedImage img = null;
+        try {
+            img = ImageIO.read(new File(ruta));
+            Image dimg = img.getScaledInstance(this.jLabel5.getWidth(), this.jLabel5.getHeight(),
+                    Image.SCALE_SMOOTH);
+
+            ImageIcon imageIcon = new ImageIcon(dimg);
+
+            //ImageIcon imageIcon = new ImageIcon(getClass().getClassLoader().getResource("sancarlos.jpg"));
+            this.jLabel5.setIcon(imageIcon);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -241,9 +268,22 @@ public class TodosLibros extends javax.swing.JFrame {
         // Reporte
         
         int linea = jTable1.getSelectedRow();
+        String cate_seleccionada = jTable1.getModel().getValueAt(linea, 0).toString();
         
-        // esto me da el nombre de la categoría
-        System.out.println(jTable1.getModel().getValueAt(linea, 0).toString());
+        // busco la categoría en el avl y genero el graphviz
+        Proyecto2.arbolAVL.iniciarBuscar(cate_seleccionada);
+        ObjCategoría seleccionada = Proyecto2.arbolAVL.devolver_cate;
+        
+        try {
+            seleccionada.arbolB.iniciarGenerarGraphviz();
+            TimeUnit.SECONDS.sleep(2);
+            this.meterimagen(seleccionada.arbolB.rutab);
+            
+        } catch (IOException ex) {
+            Logger.getLogger(TodosLibros.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(TodosLibros.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }//GEN-LAST:event_jButton3ActionPerformed
 

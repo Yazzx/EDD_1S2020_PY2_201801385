@@ -17,7 +17,7 @@ public class ObjCategoría {
     public int contalibros;
     public int usuario_creador;
     
-    public ObjCategoría(String nombre, int creador) {
+    public ObjCategoría(String nombre) {
         this.nombre = nombre;
         this.contalibros = 0;
         
@@ -42,7 +42,8 @@ public class ObjCategoría {
     }
     
     public void insertarenB(ObjLibro libro){
-        this.arbolB.insertar(libro);
+        this.arbolB.iniciarInsertar(libro);
+        //this.arbolB.insertar(libro);
         contalibros++;
         System.out.println("Inserción exitosa de: " + libro.getTitulo());
     }
