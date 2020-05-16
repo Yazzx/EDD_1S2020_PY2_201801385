@@ -15,8 +15,9 @@ public class ObjCategoría {
     String nombre;
     public ArbolB arbolB;
     public int contalibros;
-
-    public ObjCategoría(String nombre) {
+    public int usuario_creador;
+    
+    public ObjCategoría(String nombre, int creador) {
         this.nombre = nombre;
         this.contalibros = 0;
         

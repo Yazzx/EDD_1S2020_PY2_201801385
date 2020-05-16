@@ -10,6 +10,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import proyecto2.Objetos.ObjCategoría;
 
@@ -24,6 +25,7 @@ public class ArbolAVL {
         public ObjCategoría categoria;
         public int altura;
         public Nodo derecha, izquierda;
+        // public int correlativo;
 
         Nodo(ObjCategoría categoria) {
             this.categoria = categoria;
@@ -38,8 +40,10 @@ public class ArbolAVL {
             derecha = null;
             izquierda = null;
         }
-
     }
+
+    public int contanodos = 0;
+    public ArrayList listaCates = new ArrayList();
 
     public boolean yaesta = false;
     public String grafo = "", pre = "", en = "", post = "";
@@ -70,6 +74,10 @@ public class ArbolAVL {
 
     public void vaciar() {
         this.raiz = null;
+    }
+
+    public int getTamaño() {
+        return this.contanodos;
     }
 
     // buscar
@@ -111,6 +119,24 @@ public class ArbolAVL {
 
     }
 
+    public void iniciarListar() {
+        this.listar(this.raiz);
+    }
+
+    public void listar(Nodo raiz) {
+
+        if (raiz == null) {
+            return;
+        } else {
+
+            this.listaCates.add(raiz.categoria);
+
+            listar(raiz.derecha);
+            listar(raiz.izquierda);
+
+        }
+    }
+
     // insertar
     public void iniciarInsertar(ObjCategoría cate) {
 
@@ -123,6 +149,7 @@ public class ArbolAVL {
         if (raizl == null) {
             // si no existe
             nuevo = new Nodo(cate);
+            this.contanodos++;
             raizl = nuevo;
 
         } else if (cate.getNombre().compareTo(raizl.categoria.getNombre()) < 0) {
@@ -162,7 +189,82 @@ public class ArbolAVL {
         return raizl;
     }
 
+    // eliminar
+    public Nodo eliminar(ObjCategoría cate, Nodo raiz) {
+
+        if (raiz == null) {
+            return raiz;
+        }
+
+        if (cate.getNombre().compareTo(raiz.categoria.getNombre()) < 0) {
+            // si va antes en el abecedario            
+            raiz.izquierda = eliminar(cate, raiz.izquierda);
+
+        } else if (cate.getNombre().compareTo(raiz.categoria.getNombre()) > 0) {
+            // si va después en el abecedario
+            raiz.derecha = eliminar(cate, raiz.derecha);
+
+        } else {
+
+            // si tiene solo un hijo o no tiene hijos
+            if ((raiz.izquierda == null) || (raiz.derecha == null)) {
+                Nodo auxiliar = null;
+
+                if (raiz.izquierda == null) {
+                    auxiliar = raiz.derecha;
+                } else {
+                    auxiliar = raiz.izquierda;
+                }
+
+                // Si no hay hijos
+                if (auxiliar == null) {
+                    auxiliar = raiz;
+                    auxiliar = null;
+                } else {
+                    raiz = auxiliar;
+                }
+            } // si el nodo tiene dos hijos
+            else {
+                Nodo auxiliar = this.getValorinimo(raiz.derecha);
+                raiz.categoria = auxiliar.categoria;
+
+                raiz.derecha = this.eliminar(auxiliar.categoria, raiz.derecha);
+            }
+
+        }
+        
+        if (raiz == null) {
+            return raiz;
+        }
+        
+        // Balanceando
+        
+        raiz.altura = this.getMaximo(this.getAltura(raiz.izquierda), this.getAltura(raiz.derecha)) +1;
+        int balance = this.getAltura(raiz.izquierda) - this.getAltura(raiz.derecha);
+        
+        if (balance  > 1 && this.getBalance(raiz.izquierda) >= 0) {
+            return this.rotarIzquierdo(raiz);
+        }
+        
+        if (balance > 1 && this.getBalance(raiz.derecha) < 0) {
+            raiz.izquierda = this.rotarDerecho(raiz.izquierda);
+            return this.rotarIzquierdo(raiz);
+        }
+        
+        if (balance < -1 && this.getBalance(raiz.derecha) <= 0) {
+            return this.rotarDerecho(raiz);
+        }
+        
+        if (balance <-1 && this.getBalance(raiz.derecha) > 0) {
+            raiz.derecha = this.rotarIzquierdo(raiz.derecha);
+            return this.rotarDobleDerecho(raiz);
+        }
+
+        return raiz;
+    }
+
     // rotaciones
+    // singleRightRotation
     public Nodo rotarIzquierdo(Nodo dos) {
 
         Nodo uno = dos.izquierda;
@@ -175,12 +277,14 @@ public class ArbolAVL {
         return uno;
     }
 
+    // doubleLeftRoatation
     public Nodo rotarDobleIzquierdo(Nodo tres) {
 
         tres.izquierda = rotarDerecho(tres.izquierda);
         return rotarIzquierdo(tres);
     }
 
+    // singleLEftRotation
     public Nodo rotarDerecho(Nodo uno) {
 
         Nodo dos = uno.derecha;
@@ -193,6 +297,7 @@ public class ArbolAVL {
         return dos;
     }
 
+    // doubleRightRotation
     public Nodo rotarDobleDerecho(Nodo uno) {
 
         uno.derecha = rotarIzquierdo(uno.derecha);
@@ -221,6 +326,23 @@ public class ArbolAVL {
             return dos;
         }
 
+    }
+
+    public Nodo getValorinimo(Nodo nodo) {
+        Nodo actual = nodo;
+
+        while (actual.izquierda != null) {
+            actual = actual.izquierda;
+        }
+        return actual;
+    }
+    
+    public int getBalance(Nodo nodo){
+        if (nodo == null) {
+            return -1;
+        } 
+        
+        return this.getAltura(nodo.izquierda) - this.getAltura(nodo.derecha);
     }
 
     // imprimir

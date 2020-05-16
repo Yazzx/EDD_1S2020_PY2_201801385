@@ -9,6 +9,7 @@ import java.util.Arrays;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import javax.swing.table.DefaultTableModel;
 import org.apache.commons.codec.binary.Base64;
 import proyecto2.Objetos.ObjEstudiante;
 import proyecto2.Estructuras.TablaHash;
@@ -26,6 +27,8 @@ public class Proyecto2 {
     public static ArbolAVL arbolAVL = new ArbolAVL();
     
     public static ObjEstudiante estudianteEnUso;
+    
+    public static DefaultTableModel tablaCategorias;
     
     public static Inicial ini = new Inicial();
     

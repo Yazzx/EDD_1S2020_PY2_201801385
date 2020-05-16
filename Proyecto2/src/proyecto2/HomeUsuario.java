@@ -254,11 +254,21 @@ public class HomeUsuario extends javax.swing.JFrame {
         jButton7.setForeground(new java.awt.Color(255, 255, 255));
         jButton7.setText("Buscar Libros");
         jButton7.setBorder(null);
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
 
         jButton9.setBackground(new java.awt.Color(8, 75, 131));
         jButton9.setForeground(new java.awt.Color(255, 255, 255));
         jButton9.setText("Mis Libros");
         jButton9.setBorder(null);
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
 
         jButton10.setBackground(new java.awt.Color(75, 63, 114));
         jButton10.setForeground(new java.awt.Color(255, 255, 255));
@@ -507,10 +517,29 @@ public class HomeUsuario extends javax.swing.JFrame {
 //
             } catch (Exception e) {
             }
+            
+            JOptionPane.showMessageDialog(null, "Operación realizada correctamente");
+            
         }
 
 
     }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        // TODO add your handling code here:
+        TodosLibros t2 = new TodosLibros();
+        t2.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        
+        MisLibros m1 = new MisLibros();
+        m1.setVisible(true);
+        this.setVisible(false);
+        
+        
+    }//GEN-LAST:event_jButton9ActionPerformed
 
     /**
      * @param args the command line arguments

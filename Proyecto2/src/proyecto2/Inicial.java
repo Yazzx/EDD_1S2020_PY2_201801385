@@ -574,6 +574,9 @@ public class Inicial extends javax.swing.JFrame {
 
     private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
         // Aquí pongo la lista de libros
+        TodosLibros t1 = new TodosLibros();
+        t1.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
     /**

@@ -5,8 +5,14 @@
  */
 package proyecto2.Estructuras;
 
+import java.awt.Desktop;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.concurrent.TimeUnit;
 import proyecto2.Objetos.ObjLibro;
 
 /**
@@ -19,6 +25,7 @@ public class ArbolB {
     public int hojas_min = 2, hojas_max = 5;
     public int libros_min = 2, libros_max = 4;
     public String grafo = "", rutab = "";
+    public int contanodos = 0;
     
 
     // el arbol se ordena con ISBN
@@ -68,6 +75,7 @@ public class ArbolB {
         }
 
         public void imprimir() {
+            
             int j = 0;
 
             for (int i = 0; i <= this.contador; i++) {
@@ -87,6 +95,9 @@ public class ArbolB {
             if (!this.esHoja()) {
                 this.link[j].imprimir();
             }
+            
+            
+            
         }
 
         // se busca por isbn y por nombre
@@ -237,9 +248,7 @@ public class ArbolB {
 
         }
         
-        public void generarGraphviz(){
-            
-        }
+        
 
     }
 
@@ -306,8 +315,120 @@ public class ArbolB {
         }
 
     }
+    
+    public String generarGraphviz(Nodo raiz){
+        
+        
+        if (raiz == null) {
+            grafo += "";
+        } else {
+            
+            // si no está vacío
+            //A [shape=record    label="1 |2 | 3 |4 "];
+            
+            contanodos++;
+            String str = Integer.toString(contanodos);
+                        
+            grafo += str + " [shape=record    label=\"";
+            
+            for (int i = 0; i < 4; i++) {
+                if (raiz.libro[i] != null) {
+                    
+                    String isbn = Long.toString(raiz.libro[i].getIsbn());
+                    
+                    grafo += isbn +"\n" + raiz.libro[i].getTitulo();
+                } else {
+                    grafo += " . ";
+                }
+                if (i != 3) {
+                    grafo += " | ";
+                }
+            }
+            
+            grafo += "\"];\n}";
+            
+            int auxiliar = contanodos+1;
+            // miro si tiene hijos
+            for (int i = 0; i < 5; i++) {
+                
+                if (raiz.link[i] != null) {
+                    
+                    int aux2 = auxiliar+i;
+                    String dooos = Integer.toString(aux2);
+                    
+                    grafo += str + "->" + dooos + ";\n";
+                    generarGraphviz(raiz.link[i]);
+                    
+                    
+                    
+                }               
+                
+            }   
+            
+            
+        }
+        
+        
+        
+        return grafo;
+    }
 
-    public void iniciarGenerarGraphviz() {
+    public void iniciarGenerarGraphviz() throws IOException {
+        
+        this.grafo = "";
+        String alo = this.generarGraphviz(this.raiz);
+        
+        String holiwi = "";
+        holiwi = "digraph G {\n";
+        holiwi += this.grafo;
+        holiwi += "\n}";
+        
+        System.out.println("generando dot");
+
+        String userHomeFolder = System.getProperty("user.home");
+        File textFile = new File(userHomeFolder, "ArbolB.dot");
+        BufferedWriter out = new BufferedWriter(new FileWriter(textFile));
+        try {
+
+            out.append(holiwi);
+
+        } finally {
+            out.close();
+        }
+        
+        //acá genero el png
+        try {
+            String arg1 = textFile.getAbsolutePath();
+            String arg2 = arg1 + ".png";
+            System.out.println("generando png");
+            String[] c = {"dot", "-Tpng", arg1, "-o", arg2};
+            Process p = Runtime.getRuntime().exec(c);
+            this.rutab = arg2;
+
+            TimeUnit.SECONDS.sleep(2);
+
+            this.generarPNG(arg2);
+
+        } catch (Exception e) {
+
+            System.out.println(e);
+
+        }
+
+    }
+    
+    public void generarPNG(String arg2) {
+
+        try {
+
+            System.out.println("abriendo");
+            File imagen = new File(arg2);
+            Desktop.getDesktop().open(imagen);
+            //System.out.println("fin de abrir");
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
 
     }
 }
