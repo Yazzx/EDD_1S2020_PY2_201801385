@@ -265,7 +265,7 @@ public class IngresoLibroIndividual extends javax.swing.JFrame {
                 || jTextField2.getText().equals("") || jTextField6.getText().equals("")
                 || jTextField3.getText().equals("") || jTextField7.getText().equals("")
                 || jTextField4.getText().equals("") || jTextField8.getText().equals("")) {
-            
+
             JOptionPane.showMessageDialog(null, "Todos los campos deben de estar llenos :C",
                     "ATENCION", JOptionPane.WARNING_MESSAGE);
             return;
@@ -288,22 +288,48 @@ public class IngresoLibroIndividual extends javax.swing.JFrame {
 
         Proyecto2.arbolAVL.iniciarBuscar(categoria);
         if (!Proyecto2.arbolAVL.yaesta) {
-            
-            ObjCategoría oc1 = new ObjCategoría(categoria);
-            
+
+            // si la categoría no existe todavía
             // aqui inserto el libro en el b de la categoría
+            ObjCategoría oc1 = new ObjCategoría(categoria);
+
+            try {
+                
+                oc1.insertarenB(o1);
+                
+            } catch (Exception e) {
+
+                System.out.println("Algo pasó insertando primera categoría " + e);
+                e.printStackTrace();
+
+            }
+
             Proyecto2.arbolAVL.iniciarInsertar(oc1);
-            
-            Proyecto2.arbolAVL.iniciarMostrarArbol();
-            
+            System.out.println("\n\n");
+
         } else {
-            
-            System.out.println("acá meto la cosa de una al arbol b");
-            
-            
-            
+
+            try {
+
+                ObjCategoría uno = Proyecto2.arbolAVL.devolver_cate;
+                System.out.println("devolví " + uno.getNombre());
+                uno.insertarenB(o1);
+
+                System.out.println("imprimiendo B de " + categoria);
+
+                uno.imprimirB();
+
+                System.out.println("\n\n");
+
+            } catch (Exception e) {
+
+                //System.out.println("Algo pasó insertando en el B  " + e);
+                e.printStackTrace();
+
+            }
+
         }
-        
+
         HomeUsuario home = new HomeUsuario();
         home.setVisible(true);
         this.setVisible(false);

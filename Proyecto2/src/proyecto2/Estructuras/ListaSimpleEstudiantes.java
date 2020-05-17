@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package proyecto2.Estructuras;
+
 import java.security.MessageDigest;
 import java.util.Arrays;
 import javax.crypto.Cipher;
@@ -18,12 +19,10 @@ import proyecto2.Proyecto2;
  * @author yasmi
  */
 public class ListaSimpleEstudiantes {
-    
+
     // estudiantes que estan en una misma categoría de una tabla hash;
-    
-    
     public class Nodo {
-        
+
         ObjEstudiante estudiante;
         Nodo siguiente, anterior;
 
@@ -65,70 +64,67 @@ public class ListaSimpleEstudiantes {
             return "estudiante=" + estudiante.getCarnet();
         }
 
-        
-        
-        
-    } 
-    
-   public String llavesecreta = "EstaClaseSiSale";
-   public Nodo primero;
-   public Nodo auxiliar, actual;
-   int tamaño;
-   ObjEstudiante estudianteEncontrado;
+    }
 
-   public ListaSimpleEstudiantes() {
-        
+    public String llavesecreta = "EstaClaseSiSale";
+    public Nodo primero;
+    public Nodo auxiliar, actual;
+    int tamaño;
+    ObjEstudiante estudianteEncontrado, estudianteEncontradoCate;
+
+    public ListaSimpleEstudiantes() {
+
         primero = null;
         this.tamaño = 0;
-    } 
-   
-   public ObjEstudiante getEstudianteEncontrado() {
+    }
+
+    public ObjEstudiante getEstudianteEncontrado() {
         return estudianteEncontrado;
-    }    
-    
-    public boolean estaVacia(){
+    }
+
+    public boolean estaVacia() {
         return primero == null;
     }
 
     public int getTamaño() {
         return tamaño;
     }
+
     
-    public String encode(String llavesecreta, String cadena){
-        
+    
+    public String encode(String llavesecreta, String cadena) {
+
         String holi = "";
-        
+
         try {
-            
+
             MessageDigest md5 = MessageDigest.getInstance("MD5");
             byte[] llaveConstraseña = md5.digest(llavesecreta.getBytes("utf-8"));
             byte[] llavebytes = Arrays.copyOf(llaveConstraseña, 24);
             SecretKey key = new SecretKeySpec(llavebytes, "DESede");
             Cipher cifrado = Cipher.getInstance("DESede");
             cifrado.init(Cipher.ENCRYPT_MODE, key);
-            
-            byte [] plainTextBytes = cadena.getBytes("utf-8");
+
+            byte[] plainTextBytes = cadena.getBytes("utf-8");
             byte[] buf = cifrado.doFinal(plainTextBytes);
-            byte [] base64 = Base64.encodeBase64(buf);
-            holi = new String(base64);    
-                
-            
+            byte[] base64 = Base64.encodeBase64(buf);
+            holi = new String(base64);
+
         } catch (Exception e) {
-            
+
             System.out.println(e);
         }
-        
-        
+
         return holi;
-        
+
     }
-    
-    public String decode(String llavesecreta, String cadena_encriptada){
-    
+
+    public String decode(String llavesecreta, String cadena_encriptada) {
+
         String adios = "";
-    
+
         try {
-            
+
             byte[] mensaje = Base64.decodeBase64(cadena_encriptada.getBytes("utf-8"));
             MessageDigest md5 = MessageDigest.getInstance("MD5");
             byte[] digestcontraseña = md5.digest(llavesecreta.getBytes("utf-8"));
@@ -136,173 +132,170 @@ public class ListaSimpleEstudiantes {
             SecretKey llave = new SecretKeySpec(llavebytes, "DESede");
             Cipher nocifrado = Cipher.getInstance("DESede");
             nocifrado.init(Cipher.DECRYPT_MODE, llave);
-            
+
             byte[] textoplano = nocifrado.doFinal(mensaje);
             adios = new String(textoplano, "UTF-8");
-            
-            
+
         } catch (Exception e) {
-            
+
             System.out.println(e);
         }
-    
+
         return adios;
     }
+
     
-    public boolean buscar(long carnet, String contraseña){
+    
+    public boolean buscar(long carnet, String contraseña) {
         // esta contraseña es la que no está encriptada
-        
+
         boolean holi = false;
-        
+
         actual = primero;
         while (actual != null) {
-            
+
             if (carnet == actual.getEstudiante().getCarnet()) {
-                
+
                 String cadena_encriptada = this.encode(this.llavesecreta, contraseña);
-                
-                
+
                 if (cadena_encriptada.compareTo(actual.getEstudiante().getContraseña()) == 0) {
-                    
+
                     holi = true;
-                    
+
                     this.estudianteEncontrado = actual.getEstudiante();
-                    
+
                     return holi;
-                    
+
                 }
-                
-                
+
             }
-            
+
             actual = actual.siguiente;
         }
-        
+
         return false;
-    }
+    }    
     
-    public void insertar(ObjEstudiante elemento){
-        
+
+    public void insertar(ObjEstudiante elemento) {
+
         if (this.estaVacia()) {
-            
+
             this.auxiliar = new Nodo(elemento);
             auxiliar.anterior = null;
             auxiliar.siguiente = null;
             this.primero = auxiliar;
             tamaño++;
-            
+
             return;
-            
+
         }
-        
+
         this.auxiliar = new Nodo(elemento);
         auxiliar.setSiguiente(this.primero);
         primero.setAnterior(auxiliar);
-        
+
         this.primero = auxiliar;
-        
-        tamaño++;        
+
+        tamaño++;
     }
-    
-    public String generarGraphviz(){
-        
+
+    public String generarGraphviz() {
+
         String hola = "";
-        
+
         if (this.estaVacia()) {
-             return hola;
+            return hola;
         }
-        
+
         hola += primero.estudiante.getCarnet();
-        
+
         actual = primero.siguiente;
-                
+
         while (actual != null) {
-            
+
             hola += "->" + actual.estudiante.getCarnet();
-            
+
             actual = actual.siguiente;
         }
-        
-        hola+= ";\n";
-        
+
+        hola += ";\n";
+
         actual = primero;
-        
+
         while (actual != null) {
-            
-            hola += actual.estudiante.getCarnet() 
-                    + "[shape = \"box\" label = \"" + actual.estudiante.getCarnet() +"\n" +
-                    actual.estudiante.getNombre() + "\n" +
-                    actual.estudiante.getContraseña()+"\"];\n";
-            
-            
+
+            hola += actual.estudiante.getCarnet()
+                    + "[shape = \"box\" label = \"" + actual.estudiante.getCarnet() + "\n"
+                    + actual.estudiante.getNombre() + "\n"
+                    + actual.estudiante.getContraseña() + "\"];\n";
+
             actual = actual.siguiente;
         }
-        
+
         return hola;
     }
-    
-    public long getPrimerCarnet(){
-        
+
+    public long getPrimerCarnet() {
+
         return this.primero.getEstudiante().getCarnet();
-        
+
     }
     
-    public void eliminarUsuario(long carnet){
-        
+    
+
+    public void eliminarUsuario(long carnet) {
+
         actual = primero;
-        
+
         while (actual != null) {
-            
+
             if (actual.getEstudiante().getCarnet() == Proyecto2.estudianteEnUso.getCarnet()) {
-             
+
                 if (actual == primero) {
-                    
+
                     primero = actual.siguiente;
                     return;
-                    
+
                 } else if (actual.siguiente == null) {
-                    
+
                     actual.anterior.setSiguiente(null);
                     //actual = null;
-                    
+
                     return;
-                    
+
                 } else {
-                    
+
                     actual.anterior.setSiguiente(actual.siguiente);
                     actual.siguiente.setAnterior(actual.anterior);
-                    
+
                     return;
-                    
+
                 }
-                
-                
+
             }
-            
-            
+
             actual = actual.siguiente;
         }
-        
+
     }
-    
-    public void editarUsuario(long carnet, ObjEstudiante nuevo_estudiante){
-        
+
+    public void editarUsuario(long carnet, ObjEstudiante nuevo_estudiante) {
+
         actual = primero;
-        
+
         while (actual != null) {
-            
+
             if (carnet == actual.getEstudiante().getCarnet()) {
-                
+
                 actual.setEstudiante(nuevo_estudiante);
                 return;
             }
-            
+
             actual = actual.siguiente;
-            
+
         }
-        
-        
-        
+
     }
-    
+
 }

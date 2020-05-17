@@ -21,7 +21,7 @@ public class TablaHash {
     ListaSimpleEstudiantes[] tabla = new ListaSimpleEstudiantes[45];
     int tamaño = 45;
     int elementos_almacenados = 0;
-    public ObjEstudiante estudianteEncontrado;
+    public ObjEstudiante estudianteEncontrado, estudianteEncontradoCate;
     public String rutapng = "";
 
     
@@ -49,6 +49,8 @@ public class TablaHash {
     public void setElementos_almacenados(int elementos_almacenados) {
         this.elementos_almacenados = elementos_almacenados;
     }
+    
+    
 
     public void insertar(ObjEstudiante estudiante) {
 
@@ -64,6 +66,8 @@ public class TablaHash {
         this.elementos_almacenados++;
 
     }
+    
+    
 
     public String generarGraphviz() {
 
@@ -147,6 +151,8 @@ public class TablaHash {
         }
 
     }
+    
+    
 
     public boolean buscarUsuario(long carnet, String contraseña) {
 
@@ -167,6 +173,7 @@ public class TablaHash {
 
         return holi;
     }
+    
     
     public void eliminar(long carnet){
         

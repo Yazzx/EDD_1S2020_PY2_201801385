@@ -115,6 +115,7 @@ public class ArbolB {
 
     }
 
+    // insertar
     public void partir(Nodo uno, Nodo dos, int posicion) {
 
         // el nodo dos es el lleno
@@ -222,7 +223,7 @@ public class ArbolB {
 
     }
 
-    // otros
+    // otros insertar
     public void showear(Nodo uno) {
         assert (uno == null);
         for (int i = 0; i < uno.getContador(); i++) {
@@ -242,6 +243,129 @@ public class ArbolB {
 
     }
 
+    // eliminar
+    public void eliminar(Nodo uno, long isbn) {
+
+        int posicion = uno.encontrar(isbn);
+        if (posicion != -1) {
+
+            if (uno.isHoja_inicial()) {
+                int i = 0;
+                for (i = 0; i < uno.getContador() && uno.libro[i].getIsbn() != isbn; i++) {
+                    // solo es para ver hasta donde llega el i
+                }
+                for (; i < uno.contador; i++) {
+
+                    // manchester 2 * T - 2
+                    if (i != 3) {
+                        uno.libro[i] = uno.libro[i + 1];
+                    }
+                }
+                uno.contador--;
+                return;
+            } 
+            
+            if(!uno.isHoja_inicial()) {
+
+                Nodo auxiliar = uno.link[posicion];
+                ObjLibro auxiliar_llave = null;
+                
+                // manchester T
+                if (auxiliar.getContador() >= 3) {
+                    while(true) {
+                        if (auxiliar.isHoja_inicial()) {
+                            //System.out.println(pred.n);
+                            auxiliar_llave = auxiliar.libro[auxiliar.getContador() - 1];
+                            break;
+                        } else {
+                            auxiliar = auxiliar.link[auxiliar.getContador()];
+                        }
+                    }
+                    eliminar(auxiliar, auxiliar_llave.getIsbn());
+                    uno.libro[posicion] = auxiliar_llave;
+                    return;
+
+                }
+                
+            }
+
+            }
+
+        }
+    
+        // otros eliminar
+    public void encontrar2Isbn() {
+    }
+
+    public void encontrar2Titulo() {
+    }
+
+    public Nodo buscarIsbn(Nodo uno, long isbn) {
+        int i = 0;
+
+        if (uno == null) {
+            return null;
+        }
+
+        for (i = 0; i < uno.getContador(); i++) {
+            if (isbn < uno.libro[i].getIsbn()) {
+                break;
+            }
+            if (isbn == uno.libro[i].getIsbn()) {
+                return uno;
+            }
+        }
+        if (uno.isHoja_inicial()) {
+            return null;
+        } else {
+            return buscarIsbn(uno.link[i], isbn);
+        }
+
+    }
+
+    public Nodo buscarTitulo(Nodo uno, String titulo) {
+        int i = 0;
+
+        if (uno == null) {
+            return null;
+        }
+
+        for (i = 0; i < uno.getContador(); i++) {
+
+            if (titulo.compareTo(uno.libro[i].getTitulo()) < 0) {
+                break;
+            }
+            if (titulo.compareTo(uno.libro[i].getTitulo()) == 0) {
+                return uno;
+            }
+        }
+        if (uno.isHoja_inicial()) {
+            return null;
+        } else {
+            return buscarTitulo(uno.link[i], titulo);
+        }
+
+    }
+
+    public boolean isbnEsta(long isbn) {
+
+        if (this.buscarIsbn(this.raizt, isbn) != null) {
+            return true;
+        }
+        return false;
+
+    }
+
+    public boolean tituloEsta(String titulo) {
+
+        if (this.buscarTitulo(this.raizt, titulo) != null) {
+            return true;
+        }
+        return false;
+
+    }
+
+    // lbear
     public void iniciarLB() {
         this.pasarlb(raizt);
     }
@@ -253,11 +377,12 @@ public class ArbolB {
         }
         if (!uno.isHoja_inicial()) {
             for (int i = 0; i < uno.getContador() + 1; i++) {
-                showear(uno.link[i]);
+                pasarlb(uno.link[i]);
             }
         }
     }
 
+    // graphviz
     public String grafiz(Nodo uno) {
 
         if (uno == null) {
@@ -295,9 +420,8 @@ public class ArbolB {
 //                    grafo += dooos + "->" + hola + ";\n";
 //
 //                }
+                for (int i = 0; i < uno.getContador() + 1; i++) {
 
-                for (int i = 0; i < uno.getContador() + 1; i++) {                   
-                    
                     grafo += str + "->" + uno.link[i].correlativo + ";\n";
                 }
 

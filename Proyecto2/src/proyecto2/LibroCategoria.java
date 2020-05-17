@@ -8,6 +8,7 @@ package proyecto2;
 import java.util.Iterator;
 import javax.swing.table.DefaultTableModel;
 import proyecto2.Objetos.ObjCategoría;
+import proyecto2.Objetos.ObjLibro;
 
 /**
  *
@@ -15,12 +16,14 @@ import proyecto2.Objetos.ObjCategoría;
  */
 public class LibroCategoria extends javax.swing.JFrame {
 
+    
+    DefaultTableModel tablaLibros;
     /**
      * Creates new form LibroCategoria
      */
     public LibroCategoria(ObjCategoría cate) {
         initComponents();
-        DefaultTableModel tablaCategorias = (DefaultTableModel) jTable1.getModel();
+        tablaLibros = (DefaultTableModel) jTable1.getModel();
         this.meteraTabla(cate);
     }
     
@@ -28,16 +31,21 @@ public class LibroCategoria extends javax.swing.JFrame {
 
         try {
 
-            Proyecto2.arbolAVL.iniciarMostrarArbol();
-            System.out.println(Proyecto2.arbolAVL.getTamaño());
-            
-            Proyecto2.arbolAVL.iniciarListar();
+           cate.arbolB.iniciarImprimir();
+           
+            if (cate.arbolB.listaB.size() < 1) {
+                cate.arbolB.iniciarLB();
+            }
+           
+           System.out.println(cate.arbolB.listaB.size());
+           
 
-            for (Iterator it = Proyecto2.arbolAVL.listaCates.iterator(); it.hasNext();) {
-                ObjCategoría var = (ObjCategoría) it.next();
+            for (Iterator it = cate.arbolB.listaB.iterator(); it.hasNext();) {
+                ObjLibro var = (ObjLibro) it.next();
 
-                Proyecto2.tablaCategorias.addRow(new Object[]{
-                    var.getNombre(), var.getContalibros()});
+                this.tablaLibros.addRow(new Object[]{
+                    var.getIsbn(), var.getTitulo(), var.getAutor(), var.getEditorial(), 
+                var.getAño(), var.getEdicion(), var.getIdioma(), var.getUsuario_dueño()});
                 
 
             }
@@ -87,11 +95,11 @@ public class LibroCategoria extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ISBN", "Titulo", "Autor", "Editorial", "Dueño"
+                "ISBN", "Titulo", "Autor", "Editorial", "Año", "Edicion", "Idioma", "Dueño"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false, false, true, true, true, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -131,9 +139,9 @@ public class LibroCategoria extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(109, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -148,6 +156,7 @@ public class LibroCategoria extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed

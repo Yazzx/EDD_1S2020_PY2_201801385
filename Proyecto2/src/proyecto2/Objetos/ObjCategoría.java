@@ -5,6 +5,9 @@
  */
 package proyecto2.Objetos;
 import proyecto2.Estructuras.ArbolB;
+import proyecto2.Estructuras.ListaSimpleEstudiantes;
+import proyecto2.Estructuras.ListaSimpleInt;
+import proyecto2.Proyecto2;
 
 /**
  *
@@ -16,6 +19,8 @@ public class ObjCategoría {
     public ArbolB arbolB;
     public int contalibros;
     public int usuario_creador;
+    public ListaSimpleInt listaDueños;
+    public long carnetPrimerDueño;
     
     public ObjCategoría(String nombre) {
         this.nombre = nombre;
@@ -23,6 +28,8 @@ public class ObjCategoría {
         
         // TODO acá va el new arbol b o así 
         this.arbolB = new ArbolB();
+        this.listaDueños = new ListaSimpleInt();
+        this.carnetPrimerDueño = Proyecto2.estudianteEnUso.getCarnet();
     }
 
     public String getNombre() {
@@ -42,6 +49,10 @@ public class ObjCategoría {
     }
     
     public void insertarenB(ObjLibro libro){
+        
+        this.listaDueños.insertar((int) Proyecto2.estudianteEnUso.carnet);     
+        
+        
         this.arbolB.iniciarInsertar(libro);
         //this.arbolB.insertar(libro);
         contalibros++;
