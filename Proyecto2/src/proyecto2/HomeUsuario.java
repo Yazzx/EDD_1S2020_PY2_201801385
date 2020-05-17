@@ -356,6 +356,7 @@ public class HomeUsuario extends javax.swing.JFrame {
         // SALIR DE USUARIO
 
         Proyecto2.estudianteEnUso = null;
+        Proyecto2.ingresofuera = true;
 
         Proyecto2.ini.setVisible(true);
         this.setVisible(false);
@@ -454,7 +455,7 @@ public class HomeUsuario extends javax.swing.JFrame {
                         String titulo = objlibro.get("Titulo").getAsString();
                         String autor = objlibro.get("Autor").getAsString();
                         String editorial = objlibro.get("Editorial").getAsString();
-                        int año = objlibro.get("Año").getAsInt();
+                        int año = objlibro.get("Anio").getAsInt();
                         String edicion = objlibro.get("Edicion").getAsString();
                         String categoria = objlibro.get("Categoria").getAsString();
                         String idioma = objlibro.get("Idioma").getAsString();
@@ -507,15 +508,21 @@ public class HomeUsuario extends javax.swing.JFrame {
                             }
 
                         }
+                        
+                        //JOptionPane.showMessageDialog(null, "LEí Json chido");
+                        
                     }
 
                     Proyecto2.arbolAVL.iniciarMostrarArbol();
                     //Proyecto2.arbolAVL.iniciargenerarGraphviz();
 
                 } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, e);
+                    //JOptionPane.showMessageDialog(null, e.getStackTrace());
                 }
 //
             } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e);
             }
             
             JOptionPane.showMessageDialog(null, "Operación realizada correctamente");

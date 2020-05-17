@@ -26,9 +26,10 @@ public class Proyecto2 {
     public static TablaHash tablaHash = new TablaHash();
     public static ArbolAVL arbolAVL = new ArbolAVL();
     
-    public static ObjEstudiante estudianteEnUso;
-    
+    public static ObjEstudiante estudianteEnUso;    
     public static DefaultTableModel tablaCategorias;
+    
+    public static boolean ingresofuera = true;
     
     public static Inicial ini = new Inicial();
     

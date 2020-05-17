@@ -436,6 +436,7 @@ public class Inicial extends javax.swing.JFrame {
             HomeUsuario u1 = new HomeUsuario();
             u1.setVisible(true);
             this.setVisible(false);
+            Proyecto2.ingresofuera = false;
 
         } else {
             JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos :c",

@@ -5,6 +5,10 @@
  */
 package proyecto2;
 
+import java.util.Iterator;
+import javax.swing.table.DefaultTableModel;
+import proyecto2.Objetos.ObjCategoría;
+
 /**
  *
  * @author yasmi
@@ -14,8 +18,38 @@ public class LibroCategoria extends javax.swing.JFrame {
     /**
      * Creates new form LibroCategoria
      */
-    public LibroCategoria() {
+    public LibroCategoria(ObjCategoría cate) {
         initComponents();
+        DefaultTableModel tablaCategorias = (DefaultTableModel) jTable1.getModel();
+        this.meteraTabla(cate);
+    }
+    
+    public void meteraTabla(ObjCategoría cate) {
+
+        try {
+
+            Proyecto2.arbolAVL.iniciarMostrarArbol();
+            System.out.println(Proyecto2.arbolAVL.getTamaño());
+            
+            Proyecto2.arbolAVL.iniciarListar();
+
+            for (Iterator it = Proyecto2.arbolAVL.listaCates.iterator(); it.hasNext();) {
+                ObjCategoría var = (ObjCategoría) it.next();
+
+                Proyecto2.tablaCategorias.addRow(new Object[]{
+                    var.getNombre(), var.getContalibros()});
+                
+
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+    }
+
+    private LibroCategoria() {
+       initComponents(); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
@@ -32,6 +66,7 @@ public class LibroCategoria extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jButton8 = new javax.swing.JButton();
 
         jLabel2.setFont(new java.awt.Font("Dialog", 1, 30)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
@@ -65,6 +100,16 @@ public class LibroCategoria extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTable1);
 
+        jButton8.setBackground(new java.awt.Color(127, 90, 131));
+        jButton8.setForeground(new java.awt.Color(255, 255, 255));
+        jButton8.setText("Regresar");
+        jButton8.setBorder(null);
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -72,15 +117,20 @@ public class LibroCategoria extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 529, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 648, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(17, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 642, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(103, 103, 103)
+                        .addComponent(jButton8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addComponent(jLabel3)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(109, Short.MAX_VALUE))
@@ -99,6 +149,24 @@ public class LibroCategoria extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+
+//        if (Proyecto2.ingresofuera) {
+//
+//            Proyecto2.ini.setVisible(true);
+//            this.setVisible(false);
+//
+//        }
+//
+//        HomeUsuario u1 = new HomeUsuario();
+//        u1.setVisible(true);
+//        this.setVisible(false);
+
+           TodosLibros t1 = new TodosLibros();
+           t1.setVisible(true);
+           this.setVisible(false);
+    }//GEN-LAST:event_jButton8ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -136,6 +204,7 @@ public class LibroCategoria extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton8;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;

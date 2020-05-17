@@ -23,11 +23,12 @@ import proyecto2.Objetos.ObjLibro;
 public class ArbolB {
 
     public String grafo = "", rutab = "";
-    public int contanodos = 0, contagrafos = 0;
-    public ArrayList listaB = new ArrayList();
+    public int contanodos = 0, contagrafos;
+    public ArrayList<ObjLibro> listaB = new ArrayList<>();
 
     class Nodo {
 
+        public int correlativo;
         public ObjLibro[] libro = new ObjLibro[4];
         public Nodo[] link = new Nodo[5];
         public int contador;
@@ -108,6 +109,9 @@ public class ArbolB {
     public ArbolB() {
 
         this.raizt = new Nodo(true);
+        this.raizt.correlativo = this.contanodos;
+        this.contanodos++;
+        this.contagrafos = 0;
 
     }
 
@@ -115,6 +119,8 @@ public class ArbolB {
 
         // el nodo dos es el lleno
         Nodo tres = new Nodo(dos.isHoja_inicial());
+        tres.correlativo = this.contanodos;
+        contanodos++;
         // cambio de contador
         tres.setContador(1);
 
@@ -123,7 +129,6 @@ public class ArbolB {
 //            tres.libro[i] = dos.libro[i + 2];
 //            //dos.libro[i+2] = null;
 //        }
-
         for (int i = 0; i < 1; i++) {
             tres.libro[i] = dos.libro[i + 3];
             //dos.libro[i+2] = null;
@@ -164,7 +169,7 @@ public class ArbolB {
 
         // estoo lo cambio a unooooo
         uno.libro[posicion] = dos.libro[2];
-                
+
         uno.contador++;
     }
 
@@ -172,6 +177,10 @@ public class ArbolB {
         Nodo raiz = this.raizt;
         if (raiz.getContador() == 4) {
             Nodo auxiliar = new Nodo();
+
+            auxiliar.correlativo = this.contanodos;
+            contanodos++;
+
             this.raizt = auxiliar;
             auxiliar.setHoja_inicial(false);
             auxiliar.setContador(0);
@@ -212,9 +221,8 @@ public class ArbolB {
         }
 
     }
-    
-    // otros
 
+    // otros
     public void showear(Nodo uno) {
         assert (uno == null);
         for (int i = 0; i < uno.getContador(); i++) {
@@ -231,105 +239,77 @@ public class ArbolB {
     public void iniciarImprimir() {
 
         this.showear(raizt);
-//        if (this.raizt != null) {
-//            this.raizt.imprimir();
-//        } else {
-//            System.out.println("El arbol está vacio");
-//        }
-//        System.out.println("");
 
+    }
+
+    public void iniciarLB() {
+        this.pasarlb(raizt);
+    }
+
+    public void pasarlb(Nodo uno) {
+        assert (uno == null);
+        for (int i = 0; i < uno.getContador(); i++) {
+            this.listaB.add(uno.libro[i]);
+        }
+        if (!uno.isHoja_inicial()) {
+            for (int i = 0; i < uno.getContador() + 1; i++) {
+                showear(uno.link[i]);
+            }
+        }
     }
 
     public String grafiz(Nodo uno) {
+
         if (uno == null) {
             grafo += "";
             return grafo;
-        }
-
-        contagrafos++;
-        String str = Integer.toString(contagrafos);
-
-        grafo += str + " [shape=record    label=\"";
-
-        for (int i = 0; i < uno.getContador(); i++) {
-            
-            String isbn = Long.toString(uno.libro[i].getIsbn());
-            grafo += isbn + "\\n" + uno.libro[i].getAutor() + "|";
-        }
-        
-        grafo = grafo.substring(0, str.length() - 1);
-        grafo += "\"];\n";
-        
-        if (!uno.isHoja_inicial()) {
-            
-            int nodos = uno.getContador()+1;
-            
-            for (int i = contagrafos; i <= contagrafos+nodos; i++) {
-                
-                String dooos = Integer.toString(contagrafos);
-
-                    grafo += dooos + "->" + i + ";\n";
-                
-            }
-            
-            
-            for (int i = 0; i < uno.getContador() + 1; i++) {
-                grafiz(uno.link[i]);
-            }
-        }
-        
-        return grafo;
-
-    }
-
-    public String generarGraphviz(Nodo raiz) {
-
-        if (raiz == null) {
-            grafo += "";
         } else {
 
-            // si no está vacío
-            //A [shape=record    label="1 |2 | 3 |4 "];
-            contanodos++;
-            String str = Integer.toString(contanodos);
+            contagrafos++;
+            String str = Integer.toString(uno.correlativo);
 
-            grafo += str + " [shape=record    label=\"";
+            grafo += str + " [shape=record    label=\" ";
 
-            for (int i = 0; i < 4; i++) {
-                if (raiz.libro[i] != null) {
+            String holiwi = "";
 
-                    String isbn = Long.toString(raiz.libro[i].getIsbn());
+            for (int i = 0; i < uno.getContador(); i++) {
 
-                    grafo += isbn + "\\n" + raiz.libro[i].getAutor();
-                } else {
-                    grafo += " . ";
-                }
-                if (i != 3) {
-                    grafo += " | ";
+                String isbn = Long.toString(uno.libro[i].getIsbn());
+                holiwi += isbn + "\\n" + uno.libro[i].getAutor();
+
+                if (i != uno.getContador() - 1) {
+                    holiwi += " | ";
                 }
             }
 
-            grafo += "\"];\n";
+            grafo += holiwi + "\"];\n";
 
-            int auxiliar = contanodos + 1;
-            // miro si tiene hijos
-            for (int i = 0; i < 5; i++) {
+            if (!uno.isHoja_inicial()) {
 
-                if (raiz.link[i] != null) {
+//                int nodos = uno.getContador() + 1;
+//                for (int i = contagrafos; i < contagrafos + nodos; i++) {
+//
+//                    String dooos = Integer.toString(contagrafos);
+//
+//                    int hola = i + 1;
+//                    grafo += dooos + "->" + hola + ";\n";
+//
+//                }
 
-                    int aux2 = auxiliar + i;
-                    String dooos = Integer.toString(aux2);
-
-                    grafo += str + "->" + dooos + ";\n";
-                    generarGraphviz(raiz.link[i]);
-
+                for (int i = 0; i < uno.getContador() + 1; i++) {                   
+                    
+                    grafo += str + "->" + uno.link[i].correlativo + ";\n";
                 }
 
+                for (int i = 0; i < uno.getContador() + 1; i++) {
+                    grafiz(uno.link[i]);
+                }
             }
 
         }
 
         return grafo;
+
     }
 
     public void iniciarGenerarGraphviz() throws IOException {
