@@ -190,6 +190,13 @@ public class ArbolAVL {
     }
 
     // eliminar
+    
+    public void iniciarEliminar(ObjCategoría cate){
+        raiz = eliminar(cate, raiz);
+        this.contanodos--;
+        System.out.println("terminó de eliminar :D");
+    }
+    
     public Nodo eliminar(ObjCategoría cate, Nodo raiz) {
 
         if (raiz == null) {
@@ -204,7 +211,11 @@ public class ArbolAVL {
             // si va después en el abecedario
             raiz.derecha = eliminar(cate, raiz.derecha);
 
-        } else {
+        } else if (cate.getNombre().compareTo(raiz.categoria.getNombre()) == 0){
+            
+            // si es la categoría que busco
+            
+            System.out.println("Si existe el nodo " + cate.getNombre());
 
             // si tiene solo un hijo o no tiene hijos
             if ((raiz.izquierda == null) || (raiz.derecha == null)) {
@@ -218,8 +229,8 @@ public class ArbolAVL {
 
                 // Si no hay hijos
                 if (auxiliar == null) {
-                    auxiliar = raiz;
-                    auxiliar = null;
+                    //auxiliar = raiz;
+                    raiz = null;
                 } else {
                     raiz = auxiliar;
                 }
@@ -231,6 +242,9 @@ public class ArbolAVL {
                 raiz.derecha = this.eliminar(auxiliar.categoria, raiz.derecha);
             }
 
+        } else {
+            // si no existe esta cosita no hago nada;
+            return raiz;
         }
         
         if (raiz == null) {
@@ -369,6 +383,8 @@ public class ArbolAVL {
         if (raiz == null) {
             grafo += "";
         } else {
+            
+            grafo += raiz.categoria.getNombre() + ";\n";
 
             if (raiz.izquierda != null) {
 

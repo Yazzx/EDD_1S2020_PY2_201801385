@@ -18,7 +18,6 @@ public class ObjCategoría {
     String nombre;
     public ArbolB arbolB;
     public int contalibros;
-    public int usuario_creador;
     public ListaSimpleInt listaDueños;
     public long carnetPrimerDueño;
     
@@ -29,6 +28,8 @@ public class ObjCategoría {
         // TODO acá va el new arbol b o así 
         this.arbolB = new ArbolB();
         this.listaDueños = new ListaSimpleInt();
+        
+        // el primer dueño 
         this.carnetPrimerDueño = Proyecto2.estudianteEnUso.getCarnet();
     }
 

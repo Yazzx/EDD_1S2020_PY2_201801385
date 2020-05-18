@@ -43,7 +43,8 @@ public class TodosLibros extends javax.swing.JFrame {
             Proyecto2.arbolAVL.iniciarMostrarArbol();
             System.out.println(Proyecto2.arbolAVL.getTamaño());
 
-            if (Proyecto2.arbolAVL.listaCates.size() < 1) {
+            if (Proyecto2.arbolAVL.listaCates.size() != Proyecto2.arbolAVL.getTamaño()) {
+                Proyecto2.arbolAVL.listaCates.clear();
                 Proyecto2.arbolAVL.iniciarListar();
             }
 

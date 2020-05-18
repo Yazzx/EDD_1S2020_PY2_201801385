@@ -5,9 +5,12 @@
  */
 package proyecto2;
 
+import java.util.Iterator;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
 import proyecto2.Objetos.ObjCategoría;
+import proyecto2.Objetos.ObjLibro;
 
 /**
  *
@@ -15,12 +18,50 @@ import proyecto2.Objetos.ObjCategoría;
  */
 public class MisCategorías extends javax.swing.JFrame {
 
+    DefaultTableModel tablaLibros;
     /**
      * Creates new form MisCategorías
      */
     public MisCategorías() {
         initComponents();
+        tablaLibros = (DefaultTableModel) jTable1.getModel();
+        this.meteraTabla();
+        
     }
+    
+    
+    public void meteraTabla() {
+
+        try {
+
+           Proyecto2.arbolAVL.iniciarMostrarArbol();
+           
+           
+            if (Proyecto2.arbolAVL.listaCates.size() != Proyecto2.arbolAVL.getTamaño()) {
+                Proyecto2.arbolAVL.listaCates.clear();
+                Proyecto2.arbolAVL.iniciarListar();
+            }
+
+            
+            for (Iterator it = Proyecto2.arbolAVL.listaCates.iterator(); it.hasNext();) {
+                ObjCategoría var = (ObjCategoría) it.next();
+                                
+
+                if (var.carnetPrimerDueño == Proyecto2.estudianteEnUso.getCarnet()) {
+                    
+                    this.tablaLibros.addRow(new Object[]{
+                    var.getNombre(), var.getContalibros()});
+                
+
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -218,8 +259,7 @@ public class MisCategorías extends javax.swing.JFrame {
             ObjCategoría o1 = new ObjCategoría(this.jTextField1.getText());
             Proyecto2.arbolAVL.iniciarInsertar(o1);
             
-            JOptionPane.showMessageDialog(null, "Categoría insertada");
-            SwingUtilities.updateComponentTreeUI(this);
+            JOptionPane.showMessageDialog(null, "Categoría insertada, recarga para visualizar :D");            
 
         }
     }//GEN-LAST:event_jButton4ActionPerformed
@@ -229,8 +269,40 @@ public class MisCategorías extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
+        // eliminar categoría
         
+        try {
+            int linea = jTable1.getSelectedRow();
+            String cate_seleccionada = jTable1.getModel().getValueAt(linea, 0).toString();
+
+            // busco la categoría en el avl 
+            Proyecto2.arbolAVL.iniciarBuscar(cate_seleccionada);
+
+            ObjCategoría c1 = Proyecto2.arbolAVL.devolver_cate;
+            
+            if (c1.carnetPrimerDueño == Proyecto2.estudianteEnUso.getCarnet()) {
+                // la categoría si pertenece al usuario
+                if (c1.listaDueños.hayOtros(Proyecto2.estudianteEnUso.getCarnet())) {
+                    // si hay libros de otra gente que no sea el usuario
+                    
+                    JOptionPane.showMessageDialog(null, "Hay libros en esta categoría que no son tuyos,\n"
+                            + "no la puedes eliminar");
+                    
+                } else {
+                 
+                    // si no hay dueños más que el usuario
+                    Proyecto2.arbolAVL.iniciarEliminar(c1);  
+                    JOptionPane.showMessageDialog(null, "Tu categoría ha sido eliminada :D\n"
+                            + "vuelve a cargar la página para ver actualizaciones");
+                    
+                }             
+                
+            }
+            
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }        
         
         
     }//GEN-LAST:event_jButton6ActionPerformed

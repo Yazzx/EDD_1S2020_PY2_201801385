@@ -42,6 +42,10 @@ public class HomeUsuario extends javax.swing.JFrame {
         this.jTextField2.setText(Proyecto2.estudianteEnUso.getNombre());
         this.jTextField3.setText(Proyecto2.estudianteEnUso.getApellido());
         this.jTextField4.setText(Proyecto2.estudianteEnUso.getCarrera());
+        
+        
+        String cadena_desencriptada = Proyecto2.decode(Proyecto2.llavesecreta, Proyecto2.estudianteEnUso.getContraseña());         
+        this.jPasswordField1.setText(cadena_desencriptada);
 
     }
 
@@ -406,8 +410,8 @@ public class HomeUsuario extends javax.swing.JFrame {
         String apellido = jTextField3.getText();
         String carrera = jTextField4.getText();
 
-        String contraseña = jPasswordField1.getText();
-
+        String contraseña = jPasswordField1.getText();        
+        
         // aca va la encriptacion
         String cadena_encriptada = Proyecto2.encode(Proyecto2.llavesecreta, contraseña);
         String cadena_desencriptada = Proyecto2.decode(Proyecto2.llavesecreta, cadena_encriptada);
@@ -560,7 +564,12 @@ public class HomeUsuario extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
-        // TODO add your handling code here:
+
+    MisCategorías m1 = new MisCategorías();
+    m1.setVisible(true);
+    this.setVisible(false);
+                
+        
     }//GEN-LAST:event_jButton12ActionPerformed
 
     /**
