@@ -56,6 +56,8 @@ public class TodosLibros extends javax.swing.JFrame {
 
             }
 
+                //Proyecto2.arbolAVL.iniciarTablear(Proyecto2.tablaCategorias);
+
         } catch (Exception e) {
             System.out.println(e);
         }

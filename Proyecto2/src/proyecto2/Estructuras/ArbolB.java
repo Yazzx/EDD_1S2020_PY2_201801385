@@ -24,7 +24,8 @@ public class ArbolB {
 
     public String grafo = "", rutab = "";
     public int contanodos = 0, contagrafos;
-    public ArrayList<ObjLibro> listaB = new ArrayList<>();
+    public boolean yaesta;
+    
 
     class Nodo {
 
@@ -175,6 +176,12 @@ public class ArbolB {
     }
 
     public void iniciarInsertar(ObjLibro libro) {
+        
+        
+        if (this.buscarIsbn(raizt, libro.getIsbn()) != null) {
+            return;
+        }
+        
         Nodo raiz = this.raizt;
         if (raiz.getContador() == 4) {
             Nodo auxiliar = new Nodo();
@@ -301,6 +308,7 @@ public class ArbolB {
     }
 
     public Nodo buscarIsbn(Nodo uno, long isbn) {
+        this.yaesta = false;
         int i = 0;
 
         if (uno == null) {
@@ -312,11 +320,14 @@ public class ArbolB {
                 break;
             }
             if (isbn == uno.libro[i].getIsbn()) {
+                this.yaesta = true;
                 return uno;
             }
         }
         if (uno.isHoja_inicial()) {
+            this.yaesta = false;
             return null;
+            
         } else {
             return buscarIsbn(uno.link[i], isbn);
         }
@@ -383,6 +394,9 @@ public class ArbolB {
     }
 
     // graphviz
+    
+    public ArrayList<ObjLibro> listaB = new ArrayList<>();
+    
     public String grafiz(Nodo uno) {
 
         if (uno == null) {

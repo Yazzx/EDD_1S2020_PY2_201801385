@@ -20,6 +20,7 @@ public class ObjCategoría {
     public int contalibros;
     public ListaSimpleInt listaDueños;
     public long carnetPrimerDueño;
+    public boolean yaestaenb = false;
     
     public ObjCategoría(String nombre) {
         this.nombre = nombre;
@@ -51,10 +52,18 @@ public class ObjCategoría {
     
     public void insertarenB(ObjLibro libro){
         
+        this.yaestaenb = false;
         this.listaDueños.insertar((int) Proyecto2.estudianteEnUso.carnet);     
         
         
         this.arbolB.iniciarInsertar(libro);
+        
+        
+        if (this.arbolB.yaesta == true) {
+            System.out.println("Este libro ya estaba : " + libro.getTitulo());
+            this.yaestaenb = true;
+            return;
+        }
         //this.arbolB.insertar(libro);
         contalibros++;
         System.out.println("Inserción exitosa de: " + libro.getTitulo());

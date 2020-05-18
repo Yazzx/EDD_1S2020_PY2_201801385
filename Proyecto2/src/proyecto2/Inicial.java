@@ -20,6 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
@@ -487,8 +488,11 @@ public class Inicial extends javax.swing.JFrame {
                 if ((archivo == null) || (archivo.getName().equals(""))) {
                     JOptionPane.showMessageDialog(this, "Nombre de archivo inválido", "Nombre de archivo inválido", JOptionPane.ERROR_MESSAGE);
                 }
+                
+                // CUALQUIER COSA LO QUE TENGO QUE BORRAR ES ESTO IUIUIUIUIU
+                Charset cs = Charset.forName("UTF-8");
 
-                Reader reader = Files.newBufferedReader(Paths.get(archivo.getAbsolutePath()));
+                Reader reader = Files.newBufferedReader(Paths.get(archivo.getAbsolutePath()), cs);
 
                 try {
                     JsonElement fileelement = JsonParser.parseReader(new FileReader(archivo));

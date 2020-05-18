@@ -33,7 +33,8 @@ public class LibroCategoria extends javax.swing.JFrame {
 
            cate.arbolB.iniciarImprimir();
            
-            if (cate.arbolB.listaB.size() < 1) {
+            if (cate.arbolB.listaB.size() != cate.arbolB.contanodos) {
+                cate.arbolB.listaB.clear();
                 cate.arbolB.iniciarLB();
             }
            

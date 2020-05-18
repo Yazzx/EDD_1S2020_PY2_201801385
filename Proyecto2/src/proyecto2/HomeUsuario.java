@@ -12,6 +12,7 @@ import com.google.gson.JsonParser;
 import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import javax.swing.JFileChooser;
@@ -455,7 +456,10 @@ public class HomeUsuario extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, "Nombre de archivo inválido", "Nombre de archivo inválido", JOptionPane.ERROR_MESSAGE);
                 }
 
-                Reader reader = Files.newBufferedReader(Paths.get(archivo.getAbsolutePath()));
+                // CUALQUIER COSA LO QUE TENGO QUE BORRAR ES ESTO IUIUIUIUIU
+                Charset cs = Charset.forName("UTF-8");
+                
+                Reader reader = Files.newBufferedReader(Paths.get(archivo.getAbsolutePath()), cs);
 
                 try {
                     JsonElement fileelement = JsonParser.parseReader(new FileReader(archivo));
@@ -474,6 +478,7 @@ public class HomeUsuario extends javax.swing.JFrame {
                         String autor = objlibro.get("Autor").getAsString();
                         String editorial = objlibro.get("Editorial").getAsString();
                         int año = objlibro.get("Anio").getAsInt();
+                        //int año = objlibro.get("Año").getAsInt();
                         String edicion = objlibro.get("Edicion").getAsString();
                         String categoria = objlibro.get("Categoria").getAsString();
                         String idioma = objlibro.get("Idioma").getAsString();
@@ -490,6 +495,9 @@ public class HomeUsuario extends javax.swing.JFrame {
 
                             try {
                                 oc1.insertarenB(o1);
+                                if (oc1.yaestaenb) {
+                                    JOptionPane.showMessageDialog(null, "El libro que insertaste ya se encontraba de antes");
+                                }
 //                                System.out.println("imprimiendo B de " + categoria);
 //                                
 //                                oc1.imprimirB();
@@ -511,6 +519,10 @@ public class HomeUsuario extends javax.swing.JFrame {
                                 ObjCategoría uno = Proyecto2.arbolAVL.devolver_cate;
                                 System.out.println("devolví " + uno.getNombre());
                                 uno.insertarenB(o1);
+                                if (uno.yaestaenb) {
+                                    JOptionPane.showMessageDialog(null, "El libro que insertaste ya se encontraba de antes");
+                                }
+                                
 
                                 System.out.println("imprimiendo B de " + categoria);
 

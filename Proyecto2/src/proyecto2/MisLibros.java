@@ -5,6 +5,12 @@
  */
 package proyecto2;
 
+import java.util.Iterator;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import proyecto2.Objetos.ObjCategoría;
+import proyecto2.Objetos.ObjLibro;
+
 /**
  *
  * @author yasmi
@@ -14,8 +20,52 @@ public class MisLibros extends javax.swing.JFrame {
     /**
      * Creates new form MisLibros
      */
+    DefaultTableModel tablaLibros;
+
     public MisLibros() {
         initComponents();
+        tablaLibros = (DefaultTableModel) jTable1.getModel();
+        this.meteraTabla();
+    }
+
+    public void meteraTabla() {
+
+        try {
+
+            // tengo que mostrar todos los libros de el usuario actual
+            if (Proyecto2.arbolAVL.listaCates.size() != Proyecto2.arbolAVL.getTamaño()) {
+                Proyecto2.arbolAVL.listaCates.clear();
+                Proyecto2.arbolAVL.iniciarListar();
+            }
+
+            for (Iterator it = Proyecto2.arbolAVL.listaCates.iterator(); it.hasNext();) {
+                ObjCategoría var = (ObjCategoría) it.next();
+
+                if (var.arbolB.listaB.size() != var.arbolB.contanodos) {
+                    var.arbolB.listaB.clear();
+                    var.arbolB.iniciarLB();
+                }
+
+                for (Iterator iti = var.arbolB.listaB.iterator(); iti.hasNext();) {
+                    ObjLibro vari = (ObjLibro) iti.next();
+                    // si el dueño = proyecto actual usuario meto cuchillo saco tripas a te creas 
+                    // lo meto a la tabla
+
+                    if (Proyecto2.estudianteEnUso.getCarnet() == vari.getUsuario_dueño()) {
+
+                        this.tablaLibros.addRow(new Object[]{
+                            vari.getIsbn(), vari.getTitulo(), vari.getAutor(), vari.getEditorial(),
+                            vari.getCategoría(), vari.getAño(), vari.getEdicion()});
+
+                    }
+
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
     }
 
     /**
@@ -34,9 +84,13 @@ public class MisLibros extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton3 = new javax.swing.JButton();
-        jTextField2 = new javax.swing.JTextField();
         jButton6 = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jButton7 = new javax.swing.JButton();
+        jTextField3 = new javax.swing.JTextField();
 
         jButton2.setBackground(new java.awt.Color(8, 75, 131));
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
@@ -87,17 +141,6 @@ public class MisLibros extends javax.swing.JFrame {
             }
         });
 
-        jTextField2.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField2.setForeground(new java.awt.Color(0, 0, 0));
-        jTextField2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 51, 51)));
-        jTextField2.setEnabled(false);
-        jTextField2.setSelectionColor(new java.awt.Color(51, 153, 255));
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
-            }
-        });
-
         jButton6.setBackground(new java.awt.Color(8, 75, 131));
         jButton6.setForeground(new java.awt.Color(255, 255, 255));
         jButton6.setText("Eliminar");
@@ -118,27 +161,80 @@ public class MisLibros extends javax.swing.JFrame {
             }
         });
 
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Eliminación Rápida"));
+
+        jTextField1.setBackground(new java.awt.Color(255, 255, 255));
+        jTextField1.setForeground(new java.awt.Color(51, 51, 51));
+
+        jLabel2.setBackground(new java.awt.Color(51, 51, 51));
+        jLabel2.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel2.setText("Escribe el ISBN del libro que deseas eliminar");
+
+        jButton7.setBackground(new java.awt.Color(8, 75, 131));
+        jButton7.setForeground(new java.awt.Color(255, 255, 255));
+        jButton7.setText("Eliminar");
+        jButton7.setBorder(null);
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(37, 37, 37)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(86, 86, 86)
+                        .addComponent(jLabel2))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(119, 119, 119)
+                        .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(8, 8, 8)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(10, Short.MAX_VALUE))
+        );
+
+        jTextField3.setBackground(new java.awt.Color(255, 255, 255));
+        jTextField3.setForeground(new java.awt.Color(51, 51, 51));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 638, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 422, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 638, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 404, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(242, 242, 242)
                         .addComponent(jButton8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(18, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(233, 233, 233))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -147,15 +243,21 @@ public class MisLibros extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
                     .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(4, 4, 4)
+                .addGap(5, 5, 5)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
-                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(55, 55, 55)
+                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -178,12 +280,67 @@ public class MisLibros extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        
+        
+        String filtro = this.jTextField3.getText();
+        this.tablaLibros.setRowCount(0);
+         
+         try {
 
+            // tengo que mostrar todos los libros de el usuario actual
+            if (Proyecto2.arbolAVL.listaCates.size() != Proyecto2.arbolAVL.getTamaño()) {
+                Proyecto2.arbolAVL.listaCates.clear();
+                Proyecto2.arbolAVL.iniciarListar();
+            }
+
+            for (Iterator it = Proyecto2.arbolAVL.listaCates.iterator(); it.hasNext();) {
+                ObjCategoría var = (ObjCategoría) it.next();
+
+                if (var.arbolB.listaB.size() != var.arbolB.contanodos) {
+                    var.arbolB.listaB.clear();
+                    var.arbolB.iniciarLB();
+                }
+
+                for (Iterator iti = var.arbolB.listaB.iterator(); iti.hasNext();) {
+                    ObjLibro vari = (ObjLibro) iti.next();
+                    // si el dueño = proyecto actual usuario meto cuchillo saco tripas a te creas 
+                    // lo meto a la tabla
+
+                    if (Proyecto2.estudianteEnUso.getCarnet() == vari.getUsuario_dueño()) {
+                        
+                        String kionda = Long.toString(vari.getIsbn());
+                                
+                        // si el filtro es isbn
+                        if (vari.getIsbn() == Long.parseLong(filtro)) {
+                            this.tablaLibros.addRow(new Object[]{
+                            vari.getIsbn(), vari.getTitulo(), vari.getAutor(), vari.getEditorial(),
+                            vari.getCategoría(), vari.getAño(), vari.getEdicion()});
+                        } else if (vari.getTitulo().toLowerCase().contains(filtro.toLowerCase())) {
+                            // si el filtro es una parte del nombre                            
+                            this.tablaLibros.addRow(new Object[]{
+                            vari.getIsbn(), vari.getTitulo(), vari.getAutor(), vari.getEditorial(),
+                            vari.getCategoría(), vari.getAño(), vari.getEdicion()});
+                            
+                        }  else if (kionda.contains(filtro)) {
+                            this.tablaLibros.addRow(new Object[]{
+                            vari.getIsbn(), vari.getTitulo(), vari.getAutor(), vari.getEditorial(),
+                            vari.getCategoría(), vari.getAño(), vari.getEdicion()});
+                        }
+                     
+
+                    }
+
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+         
+         if (this.jTable1.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(null, "Nada coincidió con tu búsqueda :c");
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
@@ -198,6 +355,75 @@ public class MisLibros extends javax.swing.JFrame {
         u1.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+         try {             
+                       
+             
+             String filtro = this.jTextField1.getText();
+             
+             try {
+                 
+                 Long filtrol = Long.parseLong(filtro);
+                 
+             } catch (Exception e) {
+                 
+                 JOptionPane.showMessageDialog(null, "No as ingresado el formato ISBN correcto :c");
+                 return;
+                 
+             }             
+             
+
+            // tengo que mostrar todos los libros de el usuario actual
+            if (Proyecto2.arbolAVL.listaCates.size() != Proyecto2.arbolAVL.getTamaño()) {
+                Proyecto2.arbolAVL.listaCates.clear();
+                Proyecto2.arbolAVL.iniciarListar();
+            }
+
+            for (Iterator it = Proyecto2.arbolAVL.listaCates.iterator(); it.hasNext();) {
+                ObjCategoría var = (ObjCategoría) it.next();
+
+                if (var.arbolB.listaB.size() != var.arbolB.contanodos) {
+                    var.arbolB.listaB.clear();
+                    var.arbolB.iniciarLB();
+                }
+
+                for (Iterator iti = var.arbolB.listaB.iterator(); iti.hasNext();) {
+                    ObjLibro vari = (ObjLibro) iti.next();
+                    // si el dueño = proyecto actual usuario meto cuchillo saco tripas a te creas 
+                    // lo meto a la tabla
+
+                    if (Proyecto2.estudianteEnUso.getCarnet() == vari.getUsuario_dueño()) {
+                        
+                        String kionda = Long.toString(vari.getIsbn());
+                                
+                        // si el filtro es isbn
+                        if (vari.getIsbn() == Long.parseLong(filtro)) {
+                            this.tablaLibros.addRow(new Object[]{
+                            vari.getIsbn(), vari.getTitulo(), vari.getAutor(), vari.getEditorial(),
+                            vari.getCategoría(), vari.getAño(), vari.getEdicion()});
+                        } else if (vari.getTitulo().toLowerCase().contains(filtro.toLowerCase())) {
+                            // si el filtro es una parte del nombre                            
+                            this.tablaLibros.addRow(new Object[]{
+                            vari.getIsbn(), vari.getTitulo(), vari.getAutor(), vari.getEditorial(),
+                            vari.getCategoría(), vari.getAño(), vari.getEdicion()});
+                            
+                        }  else if (kionda.contains(filtro)) {
+                            this.tablaLibros.addRow(new Object[]{
+                            vari.getIsbn(), vari.getTitulo(), vari.getAutor(), vari.getEditorial(),
+                            vari.getCategoría(), vari.getAño(), vari.getEdicion()});
+                        }
+                     
+
+                    }
+
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }//GEN-LAST:event_jButton7ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -239,11 +465,15 @@ public class MisLibros extends javax.swing.JFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables
 }

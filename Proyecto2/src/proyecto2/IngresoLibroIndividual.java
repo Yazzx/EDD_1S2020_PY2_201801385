@@ -294,9 +294,12 @@ public class IngresoLibroIndividual extends javax.swing.JFrame {
             ObjCategoría oc1 = new ObjCategoría(categoria);
 
             try {
-                
+
                 oc1.insertarenB(o1);
-                
+                if (oc1.yaestaenb) {
+                    JOptionPane.showMessageDialog(null, "El libro que insertaste ya se encontraba de antes");
+                }
+
             } catch (Exception e) {
 
                 System.out.println("Algo pasó insertando primera categoría " + e);
@@ -314,6 +317,9 @@ public class IngresoLibroIndividual extends javax.swing.JFrame {
                 ObjCategoría uno = Proyecto2.arbolAVL.devolver_cate;
                 System.out.println("devolví " + uno.getNombre());
                 uno.insertarenB(o1);
+                if (uno.yaestaenb) {
+                    JOptionPane.showMessageDialog(null, "El libro que insertaste ya se encontraba de antes");
+                }
 
                 System.out.println("imprimiendo B de " + categoria);
 

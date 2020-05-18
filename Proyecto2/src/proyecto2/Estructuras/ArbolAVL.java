@@ -12,7 +12,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
+import javax.swing.table.DefaultTableModel;
 import proyecto2.Objetos.ObjCategoría;
+import proyecto2.Proyecto2;
 
 /**
  *
@@ -43,7 +45,6 @@ public class ArbolAVL {
     }
 
     public int contanodos = 0;
-    public ArrayList listaCates = new ArrayList();
 
     public boolean yaesta = false;
     public String grafo = "", pre = "", en = "", post = "";
@@ -53,12 +54,60 @@ public class ArbolAVL {
     public String rutanormal = "", rutapre = "", rutaen = "", rutapost = "";
     public Nodo devolver = null;
     public ObjCategoría devolver_cate = null;
+    public boolean yaestaenb = false;
 
     Nodo raiz;
     Nodo nuevo, actual, auxiliar;
 
     public ArbolAVL() {
         this.raiz = null;
+    }
+
+    public ArrayList listaCates = new ArrayList();
+
+    // tablear
+    public void iniciarTablear(DefaultTableModel modeloTabla) {
+        this.tablear(modeloTabla, raiz);
+    }
+
+    public void tablear(DefaultTableModel modeloTabla, Nodo raiz) {
+
+        if (raiz == null) {
+            return;
+        } else {
+
+            modeloTabla.addRow(new Object[]{
+                raiz.categoria.getNombre(), raiz.categoria.getContalibros()});
+
+            listar(raiz.derecha);
+            listar(raiz.izquierda);
+
+        }
+
+    }
+
+    public void tablearFiltroUsuarioActual(DefaultTableModel modeloTabla, Nodo raiz) {
+
+        if (raiz == null) {
+            return;
+        } else {
+
+            if (raiz.categoria.carnetPrimerDueño == Proyecto2.estudianteEnUso.getCarnet()) {
+
+                modeloTabla.addRow(new Object[]{
+                    raiz.categoria.getNombre(), raiz.categoria.getContalibros()});
+
+            }
+
+            listar(raiz.derecha);
+            listar(raiz.izquierda);
+
+        }
+
+    }
+    
+    public void iniciarTablearFiltroUsuarioActual(DefaultTableModel modeloTabla){
+        this.tablearFiltroUsuarioActual(modeloTabla, raiz);
     }
 
     // vacio
@@ -190,13 +239,12 @@ public class ArbolAVL {
     }
 
     // eliminar
-    
-    public void iniciarEliminar(ObjCategoría cate){
+    public void iniciarEliminar(ObjCategoría cate) {
         raiz = eliminar(cate, raiz);
         this.contanodos--;
         System.out.println("terminó de eliminar :D");
     }
-    
+
     public Nodo eliminar(ObjCategoría cate, Nodo raiz) {
 
         if (raiz == null) {
@@ -211,10 +259,9 @@ public class ArbolAVL {
             // si va después en el abecedario
             raiz.derecha = eliminar(cate, raiz.derecha);
 
-        } else if (cate.getNombre().compareTo(raiz.categoria.getNombre()) == 0){
-            
+        } else if (cate.getNombre().compareTo(raiz.categoria.getNombre()) == 0) {
+
             // si es la categoría que busco
-            
             System.out.println("Si existe el nodo " + cate.getNombre());
 
             // si tiene solo un hijo o no tiene hijos
@@ -246,30 +293,29 @@ public class ArbolAVL {
             // si no existe esta cosita no hago nada;
             return raiz;
         }
-        
+
         if (raiz == null) {
             return raiz;
         }
-        
+
         // Balanceando
-        
-        raiz.altura = this.getMaximo(this.getAltura(raiz.izquierda), this.getAltura(raiz.derecha)) +1;
+        raiz.altura = this.getMaximo(this.getAltura(raiz.izquierda), this.getAltura(raiz.derecha)) + 1;
         int balance = this.getAltura(raiz.izquierda) - this.getAltura(raiz.derecha);
-        
-        if (balance  > 1 && this.getBalance(raiz.izquierda) >= 0) {
+
+        if (balance > 1 && this.getBalance(raiz.izquierda) >= 0) {
             return this.rotarIzquierdo(raiz);
         }
-        
+
         if (balance > 1 && this.getBalance(raiz.derecha) < 0) {
             raiz.izquierda = this.rotarDerecho(raiz.izquierda);
             return this.rotarIzquierdo(raiz);
         }
-        
+
         if (balance < -1 && this.getBalance(raiz.derecha) <= 0) {
             return this.rotarDerecho(raiz);
         }
-        
-        if (balance <-1 && this.getBalance(raiz.derecha) > 0) {
+
+        if (balance < -1 && this.getBalance(raiz.derecha) > 0) {
             raiz.derecha = this.rotarIzquierdo(raiz.derecha);
             return this.rotarDobleDerecho(raiz);
         }
@@ -350,12 +396,12 @@ public class ArbolAVL {
         }
         return actual;
     }
-    
-    public int getBalance(Nodo nodo){
+
+    public int getBalance(Nodo nodo) {
         if (nodo == null) {
             return -1;
-        } 
-        
+        }
+
         return this.getAltura(nodo.izquierda) - this.getAltura(nodo.derecha);
     }
 
@@ -383,7 +429,7 @@ public class ArbolAVL {
         if (raiz == null) {
             grafo += "";
         } else {
-            
+
             grafo += raiz.categoria.getNombre() + ";\n";
 
             if (raiz.izquierda != null) {
