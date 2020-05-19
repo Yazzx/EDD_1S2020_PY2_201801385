@@ -25,7 +25,9 @@ public class ArbolB {
     public String grafo = "", rutab = "";
     public int contanodos = 0, contagrafos;
     public boolean yaesta;
-    
+    public Nodo encontrado_isbn;
+    public PilaLibros lbeando = new PilaLibros();
+    public boolean yaelimine = false;
 
     class Nodo {
 
@@ -34,6 +36,7 @@ public class ArbolB {
         public Nodo[] link = new Nodo[5];
         public int contador;
         public boolean hoja_inicial;
+        public Nodo encontrado_isbn = null;
 
         public Nodo(boolean eshoja_inicial) {
             this.contador = 0;
@@ -176,12 +179,11 @@ public class ArbolB {
     }
 
     public void iniciarInsertar(ObjLibro libro) {
-        
-        
+
         if (this.buscarIsbn(raizt, libro.getIsbn()) != null) {
             return;
         }
-        
+
         Nodo raiz = this.raizt;
         if (raiz.getContador() == 4) {
             Nodo auxiliar = new Nodo();
@@ -253,61 +255,231 @@ public class ArbolB {
     // eliminar
     public void eliminar(Nodo uno, long isbn) {
 
-        int posicion = uno.encontrar(isbn);
-        if (posicion != -1) {
+        try {
+            int posicion = uno.encontrar(isbn);
+            // la posicion es el [x] dentro del array donde está el cosito
+            if (posicion != -1) {
+                // si existe el cosito en los cositos
 
-            if (uno.isHoja_inicial()) {
-                int i = 0;
-                for (i = 0; i < uno.getContador() && uno.libro[i].getIsbn() != isbn; i++) {
-                    // solo es para ver hasta donde llega el i
-                }
-                for (; i < uno.contador; i++) {
+                if (uno.isHoja_inicial()) {
+                    // si es una hoja
 
-                    // manchester 2 * T - 2
-                    if (i != 3) {
-                        uno.libro[i] = uno.libro[i + 1];
+                    int i = 0;
+                    for (i = 0; i < uno.getContador() && uno.libro[i].getIsbn() != isbn; i++) {
+                        // solo es para ver hasta donde llega el i
                     }
-                }
-                uno.contador--;
-                return;
-            } 
-            
-            if(!uno.isHoja_inicial()) {
+                    for (; i < uno.contador; i++) {
 
-                Nodo auxiliar = uno.link[posicion];
-                ObjLibro auxiliar_llave = null;
-                
-                // manchester T
-                if (auxiliar.getContador() >= 3) {
-                    while(true) {
-                        if (auxiliar.isHoja_inicial()) {
-                            //System.out.println(pred.n);
-                            auxiliar_llave = auxiliar.libro[auxiliar.getContador() - 1];
-                            break;
-                        } else {
-                            auxiliar = auxiliar.link[auxiliar.getContador()];
+                        // bashi 2 * T - 2
+                        if (i != 3) {
+                            uno.libro[i] = uno.libro[i + 1];
                         }
                     }
-                    eliminar(auxiliar, auxiliar_llave.getIsbn());
-                    uno.libro[posicion] = auxiliar_llave;
+                    
+                    // Solo miro que no sea mínimo y pa fuera mi loco
+                    uno.contador--;                    
                     return;
+                }
+
+                if (!uno.isHoja_inicial()) {
+
+                    // si es uno de los nodos de enmedio
+                    Nodo auxiliar = uno.link[posicion];
+                    
+                    // hijo antes del cosito
+                    ObjLibro auxiliar_llave = null;
+
+                    // manchester T
+                    if (auxiliar.getContador() >= 3) {
+                        
+                        // si el auxiilar es uno mas que el mínimo si puedo sacar de acá
+                        while (true) {
+                            if (auxiliar.isHoja_inicial()) {
+                                auxiliar_llave = auxiliar.libro[auxiliar.getContador() - 1];
+                                break;
+                            } else {
+                                auxiliar = auxiliar.link[auxiliar.getContador()];
+                            }
+                        }
+                        eliminar(auxiliar, auxiliar_llave.getIsbn());
+                        uno.libro[posicion] = auxiliar_llave;
+                        return;
+                    }
+
+                    Nodo siguiente = uno.link[posicion + 1];
+
+                    // bashi T
+                    if (siguiente.getContador() >= 2) {
+
+                        ObjLibro librosiguiente = siguiente.libro[0];
+
+                        if (!siguiente.isHoja_inicial()) {
+                            siguiente = siguiente.link[0];
+                            while (true) {
+                                if (siguiente.isHoja_inicial()) {
+                                    librosiguiente = siguiente.libro[siguiente.getContador() - 1];
+                                    break;
+                                } else {
+                                    siguiente = siguiente.link[siguiente.contador];
+                                }
+                            }
+                        }
+                        eliminar(siguiente, librosiguiente.getIsbn());
+                        uno.libro[posicion] = librosiguiente;
+                        return;
+                    }
+
+                    int temp = auxiliar.getContador() + 1;
+                    auxiliar.libro[auxiliar.contador++] = uno.libro[posicion];
+                    for (int i = 0, j = auxiliar.getContador(); i < siguiente.getContador(); i++) {
+                        auxiliar.libro[j++] = siguiente.libro[i];
+                        auxiliar.contador++;
+                    }
+                    for (int i = 0; i < siguiente.getContador() + 1; i++) {
+                        auxiliar.link[temp++] = siguiente.link[i];
+                    }
+
+                    uno.link[posicion] = auxiliar;
+                    for (int i = posicion; i < uno.getContador(); i++) {
+                        // bashi 2t-2
+                        if (i != 3) {
+                            uno.libro[i] = uno.libro[i + 1];
+                        }
+                    }
+                    for (int i = posicion + 1; i < uno.contador + 1; i++) {
+                        // bashi 2t-2
+                        if (i != 3) {
+                            uno.link[i] = uno.link[i + 1];
+                        }
+                    }
+                    uno.contador--;
+
+                    if (uno.getContador() == 0) {
+                        if (uno == this.raizt) {
+                            this.raizt = uno.link[0];
+                        }
+                        uno = uno.link[0];
+                    }
+                    eliminar(auxiliar, isbn);
+                    return;
+                }
+            } else {
+                for (posicion = 0; posicion < uno.getContador(); posicion++) {
+                    if (uno.libro[posicion].getIsbn() > isbn) {
+                        break;
+                    }
 
                 }
-                
-            }
+
+                Nodo mientras = uno.link[posicion];
+                if (mientras.getContador() >= 2) {
+                    eliminar(mientras, isbn);
+                    return;
+                }
+                if (true) {
+                    Nodo nb = null;
+                    ObjLibro divididor = new ObjLibro();
+
+                    // bashi t
+                    if (posicion != uno.getContador() && uno.link[posicion + 1].getContador() >= 2) {
+                        divididor = uno.libro[posicion];
+                        nb = uno.link[posicion + 1];
+                        uno.libro[posicion] = nb.libro[0];
+                        mientras.libro[mientras.contador++] = divididor;
+                        mientras.link[mientras.getContador()] = nb.link[0];
+                        for (int i = 1; i < nb.getContador(); i++) {
+                            nb.libro[i - 1] = nb.libro[i];
+                        }
+                        for (int i = 1; i <= nb.getContador(); i++) {
+                            nb.link[i - 1] = nb.link[i];
+                        }
+                        nb.contador--;
+                        eliminar(mientras, isbn);
+                        return;
+
+                        // bashi t
+                    } else if (posicion != 0 && uno.link[posicion - 1].getContador() >= 2) {
+
+                        divididor = uno.libro[posicion - 1];
+                        nb = uno.link[posicion - 1];
+                        uno.libro[posicion - 1] = nb.libro[nb.getContador() - 1];
+                        Nodo hijo = nb.link[nb.getContador()];
+                        nb.contador--;
+
+                        for (int i = mientras.getContador(); i > 0; i--) {
+                            mientras.libro[i] = mientras.libro[i - 1];
+                        }
+                        mientras.libro[0] = divididor;
+                        for (int i = mientras.getContador() + 1; i > 0; i--) {
+                            mientras.link[i] = mientras.link[i - 1];
+                        }
+                        mientras.link[0] = hijo;
+                        mientras.contador++;
+                        eliminar(mientras, isbn);
+                        return;
+
+                    } else {
+                        Nodo izq = null;
+                        Nodo der = null;
+                        boolean ultimo = false;
+                        if (posicion != uno.contador) {
+                            divididor = uno.libro[posicion];
+                            izq = uno.link[posicion];
+                            der = uno.link[posicion + 1];
+                        } else {
+                            divididor = uno.libro[posicion - 1];
+                            der = uno.link[posicion];
+                            izq = uno.link[posicion - 1];
+                            ultimo = true;
+                            posicion--;
+                        }
+                        for (int i = posicion; i < uno.getContador() - 1; i++) {
+                            uno.libro[i] = uno.libro[i + 1];
+                        }
+                        for (int i = posicion + 1; i < uno.getContador(); i++) {
+                            uno.link[i] = uno.link[i + 1];
+                        }
+                        uno.contador--;
+                        izq.libro[izq.contador++] = divididor;
+                        for (int i = 0, j = izq.getContador(); i < der.getContador() + 1; i++, j++) {
+                            if (i < der.getContador()) {
+                                izq.libro[j] = der.libro[i];
+                            }
+                            izq.link[j] = der.link[i];
+                        }
+                        izq.contador += der.contador;
+                        if (uno.getContador() == 0) {
+                            if (uno == this.raizt) {
+                                this.raizt = uno.link[0];
+                            }
+                            uno = uno.link[0];
+                        }
+                        eliminar(izq, isbn);
+                        return;
+                    }
+                }
 
             }
-
+        } catch (Exception e) {
+            this.yaelimine = false;
+            System.out.println(e);
         }
-    
-        // otros eliminar
-    public void encontrar2Isbn() {
+
     }
 
-    public void encontrar2Titulo() {
+    public void iniciarEliminar(long isbn) {
+        this.yaelimine = false;
+        Nodo uno = buscarIsbn(this.raizt, isbn);
+        if (uno == null) {
+            return;
+        }
+        eliminar(this.raizt, isbn);
+        System.out.println("Se ha eliminado con éxito :3");
+        
     }
+    // otros eliminar
 
-    public Nodo buscarIsbn(Nodo uno, long isbn) {
+    private Nodo buscarIsbn(Nodo uno, long isbn) {
         this.yaesta = false;
         int i = 0;
 
@@ -327,14 +499,14 @@ public class ArbolB {
         if (uno.isHoja_inicial()) {
             this.yaesta = false;
             return null;
-            
+
         } else {
             return buscarIsbn(uno.link[i], isbn);
         }
 
     }
 
-    public Nodo buscarTitulo(Nodo uno, String titulo) {
+    private Nodo buscarTitulo(Nodo uno, String titulo) {
         int i = 0;
 
         if (uno == null) {
@@ -360,7 +532,10 @@ public class ArbolB {
 
     public boolean isbnEsta(long isbn) {
 
-        if (this.buscarIsbn(this.raizt, isbn) != null) {
+        this.encontrado_isbn = null;
+
+        this.encontrado_isbn = this.buscarIsbn(this.raizt, isbn);
+        if (this.encontrado_isbn != null) {
             return true;
         }
         return false;
@@ -377,6 +552,8 @@ public class ArbolB {
     }
 
     // lbear
+    public ArrayList<ObjLibro> listaB = new ArrayList<>();
+
     public void iniciarLB() {
         this.pasarlb(raizt);
     }
@@ -385,6 +562,7 @@ public class ArbolB {
         assert (uno == null);
         for (int i = 0; i < uno.getContador(); i++) {
             this.listaB.add(uno.libro[i]);
+            this.lbeando.insertar(uno.libro[i]);
         }
         if (!uno.isHoja_inicial()) {
             for (int i = 0; i < uno.getContador() + 1; i++) {
@@ -394,9 +572,6 @@ public class ArbolB {
     }
 
     // graphviz
-    
-    public ArrayList<ObjLibro> listaB = new ArrayList<>();
-    
     public String grafiz(Nodo uno) {
 
         if (uno == null) {

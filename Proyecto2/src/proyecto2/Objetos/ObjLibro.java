@@ -17,6 +17,10 @@ public class ObjLibro{
     int año;
     String edicion, categoría, idioma;
     public String isbnstring;
+    
+    public ObjLibro(){
+        
+    }
 
     public ObjLibro(long usuario_dueño, long isbn, String titulo, String autor, String editorial, int año, String edicion, String categoría, String idioma) {
         this.usuario_dueño = usuario_dueño;

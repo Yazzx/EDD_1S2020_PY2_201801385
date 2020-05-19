@@ -280,12 +280,11 @@ public class MisLibros extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        
-        
+
         String filtro = this.jTextField3.getText();
         this.tablaLibros.setRowCount(0);
-         
-         try {
+
+        try {
 
             // tengo que mostrar todos los libros de el usuario actual
             if (Proyecto2.arbolAVL.listaCates.size() != Proyecto2.arbolAVL.getTamaño()) {
@@ -307,26 +306,31 @@ public class MisLibros extends javax.swing.JFrame {
                     // lo meto a la tabla
 
                     if (Proyecto2.estudianteEnUso.getCarnet() == vari.getUsuario_dueño()) {
-                        
+
                         String kionda = Long.toString(vari.getIsbn());
-                                
-                        // si el filtro es isbn
-                        if (vari.getIsbn() == Long.parseLong(filtro)) {
+
+                        try {
+                            // si el filtro es isbn
+                            if (vari.getIsbn() == Long.parseLong(filtro)) {
+                                this.tablaLibros.addRow(new Object[]{
+                                    vari.getIsbn(), vari.getTitulo(), vari.getAutor(), vari.getEditorial(),
+                                    vari.getCategoría(), vari.getAño(), vari.getEdicion()});                                
+                            } else if (kionda.contains(filtro)) {
                             this.tablaLibros.addRow(new Object[]{
-                            vari.getIsbn(), vari.getTitulo(), vari.getAutor(), vari.getEditorial(),
-                            vari.getCategoría(), vari.getAño(), vari.getEdicion()});
-                        } else if (vari.getTitulo().toLowerCase().contains(filtro.toLowerCase())) {
+                                vari.getIsbn(), vari.getTitulo(), vari.getAutor(), vari.getEditorial(),
+                                vari.getCategoría(), vari.getAño(), vari.getEdicion()});
+                        }
+                        } catch (Exception e) {
+                        }
+
+                        if (vari.getTitulo().toLowerCase().contains(filtro.toLowerCase())
+                                || vari.getAutor().toLowerCase().contains(filtro.toLowerCase())) {
                             // si el filtro es una parte del nombre                            
                             this.tablaLibros.addRow(new Object[]{
-                            vari.getIsbn(), vari.getTitulo(), vari.getAutor(), vari.getEditorial(),
-                            vari.getCategoría(), vari.getAño(), vari.getEdicion()});
-                            
-                        }  else if (kionda.contains(filtro)) {
-                            this.tablaLibros.addRow(new Object[]{
-                            vari.getIsbn(), vari.getTitulo(), vari.getAutor(), vari.getEditorial(),
-                            vari.getCategoría(), vari.getAño(), vari.getEdicion()});
-                        }
-                     
+                                vari.getIsbn(), vari.getTitulo(), vari.getAutor(), vari.getEditorial(),
+                                vari.getCategoría(), vari.getAño(), vari.getEdicion()});
+
+                        } 
 
                     }
 
@@ -336,8 +340,8 @@ public class MisLibros extends javax.swing.JFrame {
         } catch (Exception e) {
             System.out.println(e);
         }
-         
-         if (this.jTable1.getRowCount() == 0) {
+
+        if (this.jTable1.getRowCount() == 0) {
             JOptionPane.showMessageDialog(null, "Nada coincidió con tu búsqueda :c");
         }
     }//GEN-LAST:event_jButton3ActionPerformed
@@ -347,7 +351,42 @@ public class MisLibros extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
+
+        boolean estuvo = false;
+        int linea = jTable1.getSelectedRow();
+        String isbn_seleccionado = jTable1.getModel().getValueAt(linea, 0).toString();
+        String cate_de_libro = jTable1.getModel().getValueAt(linea, 4).toString();
+
+        System.out.println("buscando el libro en la categoría:" + cate_de_libro);
+
+        // busco la categoría en el avl 
+        Proyecto2.arbolAVL.iniciarBuscar(cate_de_libro);
+
+        ObjCategoría c1 = Proyecto2.arbolAVL.devolver_cate;
+
+        try {
+
+            Long isbn = Long.parseLong(isbn_seleccionado);
+
+            if (c1.arbolB.isbnEsta(isbn)) {
+
+                // aqui va el método eliminar
+                estuvo = true;
+                
+                c1.eliminarLibro(isbn);
+                System.out.println("solo falta eliminar :)");
+                JOptionPane.showMessageDialog(null, "Tu libro ha sido eliminada :D\n"
+                            + "vuelve a cargar la página para ver actualizaciones");
+            }
+
+        } catch (Exception e) {
+        }
+
+        
+        if (!estuvo) {
+            JOptionPane.showMessageDialog(null, "No encontramos este isbn");
+        }
+
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
@@ -357,67 +396,49 @@ public class MisLibros extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-         try {             
-                       
-             
-             String filtro = this.jTextField1.getText();
-             
-             try {
-                 
-                 Long filtrol = Long.parseLong(filtro);
-                 
-             } catch (Exception e) {
-                 
-                 JOptionPane.showMessageDialog(null, "No as ingresado el formato ISBN correcto :c");
-                 return;
-                 
-             }             
-             
+        try {
 
-            // tengo que mostrar todos los libros de el usuario actual
-            if (Proyecto2.arbolAVL.listaCates.size() != Proyecto2.arbolAVL.getTamaño()) {
-                Proyecto2.arbolAVL.listaCates.clear();
-                Proyecto2.arbolAVL.iniciarListar();
-            }
+            String filtro = this.jTextField1.getText();
 
-            for (Iterator it = Proyecto2.arbolAVL.listaCates.iterator(); it.hasNext();) {
-                ObjCategoría var = (ObjCategoría) it.next();
+            try {
+                
+                boolean estuvo = false;
 
-                if (var.arbolB.listaB.size() != var.arbolB.contanodos) {
-                    var.arbolB.listaB.clear();
-                    var.arbolB.iniciarLB();
+                Long isbn = Long.parseLong(filtro);
+
+                // aca solo pongo el filtro de eliminarlibro en avl
+                // eliminar libro en el b correspondiente
+                if (Proyecto2.arbolAVL.listaCates.size() != Proyecto2.arbolAVL.getTamaño()) {
+                    Proyecto2.arbolAVL.listaCates.clear();
+                    Proyecto2.arbolAVL.iniciarListar();
                 }
 
-                for (Iterator iti = var.arbolB.listaB.iterator(); iti.hasNext();) {
-                    ObjLibro vari = (ObjLibro) iti.next();
-                    // si el dueño = proyecto actual usuario meto cuchillo saco tripas a te creas 
-                    // lo meto a la tabla
+                for (Iterator it = Proyecto2.arbolAVL.listaCates.iterator(); it.hasNext();) {
+                    ObjCategoría var = (ObjCategoría) it.next();
 
-                    if (Proyecto2.estudianteEnUso.getCarnet() == vari.getUsuario_dueño()) {
+                    if (var.arbolB.isbnEsta(isbn)) {
+
+                        // aqui va el método eliminar
+                        estuvo = true;
                         
-                        String kionda = Long.toString(vari.getIsbn());
-                                
-                        // si el filtro es isbn
-                        if (vari.getIsbn() == Long.parseLong(filtro)) {
-                            this.tablaLibros.addRow(new Object[]{
-                            vari.getIsbn(), vari.getTitulo(), vari.getAutor(), vari.getEditorial(),
-                            vari.getCategoría(), vari.getAño(), vari.getEdicion()});
-                        } else if (vari.getTitulo().toLowerCase().contains(filtro.toLowerCase())) {
-                            // si el filtro es una parte del nombre                            
-                            this.tablaLibros.addRow(new Object[]{
-                            vari.getIsbn(), vari.getTitulo(), vari.getAutor(), vari.getEditorial(),
-                            vari.getCategoría(), vari.getAño(), vari.getEdicion()});
-                            
-                        }  else if (kionda.contains(filtro)) {
-                            this.tablaLibros.addRow(new Object[]{
-                            vari.getIsbn(), vari.getTitulo(), vari.getAutor(), vari.getEditorial(),
-                            vari.getCategoría(), vari.getAño(), vari.getEdicion()});
-                        }
-                     
-
+                        var.eliminarLibro(isbn);
+                        JOptionPane.showMessageDialog(null, "Tu libro ha sido eliminada :D\n"
+                            + "vuelve a cargar la página para ver actualizaciones");
+                        
+                        //System.out.println("solo falta eliminar :)");
                     }
 
                 }
+                
+                if (!estuvo) {
+                    JOptionPane.showMessageDialog(null, "No encontramos este isbn");
+                }
+
+            } catch (Exception e) {
+
+                JOptionPane.showMessageDialog(null, "No as ingresado el formato ISBN correcto :c");
+                return;
+
             }
 
         } catch (Exception e) {

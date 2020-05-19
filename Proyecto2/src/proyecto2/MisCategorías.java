@@ -35,12 +35,27 @@ public class MisCategorías extends javax.swing.JFrame {
         try {
 
             Proyecto2.arbolAVL.iniciarMostrarArbol();
+            
+            //Proyecto2.arbolAVL.listaaaa.vaciar();
+            //Proyecto2.arbolAVL.iniciarListar();
 
            
             if (Proyecto2.arbolAVL.listaCates.size() != Proyecto2.arbolAVL.getTamaño()) {
                 Proyecto2.arbolAVL.listaCates.clear();
                 Proyecto2.arbolAVL.iniciarListar();
             }
+            
+            /*for (int i = 0; i < Proyecto2.arbolAVL.contanodos; i++) {
+                
+                if (var.carnetPrimerDueño == Proyecto2.estudianteEnUso.getCarnet()) {
+                    
+                    this.tablaLibros.addRow(new Object[]{
+                    var.getNombre(), var.getContalibros()});
+                
+
+                }
+                
+            }*/
 
             
             for (Iterator it = Proyecto2.arbolAVL.listaCates.iterator(); it.hasNext();) {

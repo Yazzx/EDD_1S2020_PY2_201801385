@@ -55,6 +55,7 @@ public class ArbolAVL {
     public Nodo devolver = null;
     public ObjCategoría devolver_cate = null;
     public boolean yaestaenb = false;
+    public ListaCategorías listaaaa = new ListaCategorías();
 
     Nodo raiz;
     Nodo nuevo, actual, auxiliar;
@@ -63,28 +64,12 @@ public class ArbolAVL {
         this.raiz = null;
     }
 
-    public ArrayList listaCates = new ArrayList();
+    
 
     // tablear
-    public void iniciarTablear(DefaultTableModel modeloTabla) {
-        this.tablear(modeloTabla, raiz);
-    }
-
-    public void tablear(DefaultTableModel modeloTabla, Nodo raiz) {
-
-        if (raiz == null) {
-            return;
-        } else {
-
-            modeloTabla.addRow(new Object[]{
-                raiz.categoria.getNombre(), raiz.categoria.getContalibros()});
-
-            listar(raiz.derecha);
-            listar(raiz.izquierda);
-
-        }
-
-    }
+    // esto es para verificar que se metieron las cosas chidas a la tabla
+    
+    
 
     public void tablearFiltroUsuarioActual(DefaultTableModel modeloTabla, Nodo raiz) {
 
@@ -168,6 +153,10 @@ public class ArbolAVL {
 
     }
 
+    
+    // listar
+    
+    public ArrayList listaCates = new ArrayList();
     public void iniciarListar() {
         this.listar(this.raiz);
     }
@@ -179,6 +168,7 @@ public class ArbolAVL {
         } else {
 
             this.listaCates.add(raiz.categoria);
+            this.listaaaa.insertar(raiz.categoria);
 
             listar(raiz.derecha);
             listar(raiz.izquierda);

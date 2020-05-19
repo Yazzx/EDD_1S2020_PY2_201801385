@@ -9,10 +9,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import javax.swing.JFileChooser;
@@ -461,12 +465,15 @@ public class HomeUsuario extends javax.swing.JFrame {
                 
                 Reader reader = Files.newBufferedReader(Paths.get(archivo.getAbsolutePath()), cs);
 
+                
                 try {
-                    JsonElement fileelement = JsonParser.parseReader(new FileReader(archivo));
+                    JsonElement fileelement = JsonParser.parseReader(new FileReader(archivo,StandardCharsets.UTF_8));
                     JsonObject objeto = fileelement.getAsJsonObject();
 
                     // procesando los gets
+                    
                     JsonArray cositousuarios = objeto.get("libros").getAsJsonArray();
+
 
                     for (JsonElement eleusuario : cositousuarios) {
 
@@ -477,8 +484,8 @@ public class HomeUsuario extends javax.swing.JFrame {
                         String titulo = objlibro.get("Titulo").getAsString();
                         String autor = objlibro.get("Autor").getAsString();
                         String editorial = objlibro.get("Editorial").getAsString();
-                        int año = objlibro.get("Anio").getAsInt();
-                        //int año = objlibro.get("Año").getAsInt();
+                        //int año = objlibro.get("Anio").getAsInt();
+                        int año = objlibro.get("Año").getAsInt();
                         String edicion = objlibro.get("Edicion").getAsString();
                         String categoria = objlibro.get("Categoria").getAsString();
                         String idioma = objlibro.get("Idioma").getAsString();

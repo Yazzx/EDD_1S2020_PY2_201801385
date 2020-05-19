@@ -21,6 +21,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
@@ -490,12 +491,15 @@ public class Inicial extends javax.swing.JFrame {
                 }
                 
                 // CUALQUIER COSA LO QUE TENGO QUE BORRAR ES ESTO IUIUIUIUIU
+                
+                
                 Charset cs = Charset.forName("UTF-8");
 
                 Reader reader = Files.newBufferedReader(Paths.get(archivo.getAbsolutePath()), cs);
 
                 try {
-                    JsonElement fileelement = JsonParser.parseReader(new FileReader(archivo));
+                    
+                    JsonElement fileelement = JsonParser.parseReader(new FileReader(archivo,StandardCharsets.UTF_8));
                     JsonObject objeto = fileelement.getAsJsonObject();
 
                     // procesando los gets
